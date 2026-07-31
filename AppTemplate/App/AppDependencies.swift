@@ -13,28 +13,31 @@ final class AppDependencies {
 
     private let auth: AuthRepository
     private let users: UserRepository
-    private let products: ProductRepository
+    private let items: ItemRepository
+    private let imageLoader: any ImageLoading
 
     private init(session: SessionManager,
                  auth: AuthRepository,
                  users: UserRepository,
-                 products: ProductRepository) {
+                 items: ItemRepository,
+                 imageLoader: any ImageLoading) {
         self.session = session
         self.auth = auth
         self.users = users
-        self.products = products
+        self.items = items
+        self.imageLoader = imageLoader
     }
 
     static func live() -> AppDependencies {
-        let baseURL = URL(string: "https://dummyjson.com")!
         let tokenStore = KeychainTokenStore()
-        let api = URLSessionAPIClient(baseURL: baseURL, tokenStore: tokenStore)
+        let api = URLSessionAPIClient(baseURL: APIConfig.baseURL, tokenStore: tokenStore)
 
         return AppDependencies(
             session: SessionManager(tokenStore: tokenStore),
             auth: LiveAuthRepository(api: api),
             users: LiveUserRepository(api: api),
-            products: LiveProductRepository(api: api)
+            items: LiveItemRepository(api: api),
+            imageLoader: ImageLoader.shared
         )
     }
 
@@ -45,7 +48,7 @@ final class AppDependencies {
     }
 
     func makeRegisterViewModel() -> RegisterViewModel {
-        RegisterViewModel(auth: auth)
+        RegisterViewModel(auth: auth, users: users)
     }
 
     func makeForgotPasswordViewModel() -> ForgotPasswordViewModel {
@@ -53,14 +56,14 @@ final class AppDependencies {
     }
 
     func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel(repository: products)
+        HomeViewModel(repository: items)
     }
 
-    func makeProductDetailViewModel(product: Product) -> ProductDetailViewModel {
-        ProductDetailViewModel(product: product, repository: products)
+    func makeItemDetailViewModel(item: Item) -> ItemDetailViewModel {
+        ItemDetailViewModel(item: item, repository: items)
     }
 
     func makeProfileViewModel() -> ProfileViewModel {
-        ProfileViewModel(repository: users, session: session)
+        ProfileViewModel(repository: users, session: session, imageLoader: imageLoader)
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import Observation
 
 @Observable
@@ -16,14 +17,17 @@ final class RegisterViewModel {
     var email = ""
     var username = ""
     var password = ""
+    var selectedImage: UIImage?
     var isLoading = false
     var errorMessage: String?
     var didRegister = false
 
     @ObservationIgnored private let auth: AuthRepository
+    @ObservationIgnored private let users: UserRepository
 
-    init(auth: AuthRepository) {
+    init(auth: AuthRepository, users: UserRepository) {
         self.auth = auth
+        self.users = users
     }
 
     var canSubmit: Bool {
@@ -43,6 +47,11 @@ final class RegisterViewModel {
                                 username: username,
                                 password: password)
             )
+            // Avatar is optional: upload it if one was picked, but don't fail
+            // registration if the upload errors — the user can add it later.
+            if let selectedImage {
+                _ = try? await users.uploadAvatar(selectedImage)
+            }
             didRegister = true
         } catch {
             errorMessage = error.localizedDescription

@@ -42,9 +42,9 @@ struct User: Decodable, Identifiable, Equatable {
     var fullName: String { "\(firstName) \(lastName)" }
 }
 
-// MARK: - Products
+// MARK: - Items (sample feature — replace with your own models)
 
-struct Product: Decodable, Identifiable, Equatable, Hashable {
+struct Item: Decodable, Identifiable, Equatable, Hashable {
     let id: Int
     let title: String
     let description: String
@@ -52,6 +52,10 @@ struct Product: Decodable, Identifiable, Equatable, Hashable {
     let thumbnail: String?
 }
 
-struct ProductsResponse: Decodable {
-    let products: [Product]
+struct ItemListResponse: Decodable {
+    let items: [Item]
+
+    enum CodingKeys: String, CodingKey {
+        case items = "products"
+    }
 }

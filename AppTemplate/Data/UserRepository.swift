@@ -6,18 +6,27 @@
 //
 
 import Foundation
+import UIKit
 
 protocol UserRepository {
     func currentUser() async throws -> User
+    func uploadAvatar(_ image: UIImage) async throws -> User
 }
 
 final class LiveUserRepository: UserRepository {
     private let api: APIClient
 
-    init(api: APIClient) { self.api = api }
+    init(api: APIClient) {
+        self.api = api
+    }
 
-    /// Uses the stored token (attached automatically by the client).
     func currentUser() async throws -> User {
-        try await api.get("auth/me")
+        try await api.get(Endpoints.currentUser)
+    }
+
+    func uploadAvatar(_ image: UIImage) async throws -> User {
+        var form = MultipartFormData()
+        form.addImage(image, name: "avatar", filename: "avatar.jpg")
+        return try await api.upload(Endpoints.avatar, multipart: form)
     }
 }

@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
+    @State private var photoItem: PhotosPickerItem?
 
     init(viewModel: ProfileViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -19,7 +21,7 @@ struct ProfileView: View {
             if let user = viewModel.user {
                 Section {
                     HStack(spacing: 16) {
-                        AsyncImage(url: user.image.flatMap(URL.init)) { image in
+                        CachedAsyncImage(url: user.image.flatMap(URL.init)) { image in
                             image.resizable().aspectRatio(contentMode: .fill)
                         } placeholder: {
                             Image(systemName: "person.crop.circle.fill")
@@ -35,6 +37,18 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.vertical, 4)
+
+                    PhotosPicker(selection: $photoItem, matching: .images) {
+                        Label("Change Photo", systemImage: "photo")
+                    }
+                    .disabled(viewModel.isUploadingAvatar)
+
+                    if viewModel.isUploadingAvatar {
+                        HStack(spacing: 8) {
+                            ProgressView()
+                            Text("Uploading…").foregroundStyle(.secondary)
+                        }
+                    }
                 }
 
                 Section("Account") {
@@ -60,5 +74,13 @@ struct ProfileView: View {
         }
         .navigationTitle("Profile")
         .task { await viewModel.load() }
+        .onChange(of: photoItem) { _, newItem in
+            Task {
+                if let data = try? await newItem?.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    await viewModel.uploadAvatar(image)
+                }
+            }
+        }
     }
 }

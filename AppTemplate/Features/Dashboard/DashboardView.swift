@@ -28,9 +28,9 @@ private struct HomeTab: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             HomeView(viewModel: dependencies.makeHomeViewModel())
-                .navigationDestination(for: Product.self) { product in
-                    ProductDetailView(
-                        viewModel: dependencies.makeProductDetailViewModel(product: product)
+                .navigationDestination(for: Item.self) { item in
+                    ItemDetailView(
+                        viewModel: dependencies.makeItemDetailViewModel(item: item)
                     )
                 }
         }

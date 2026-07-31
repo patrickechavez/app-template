@@ -17,37 +17,37 @@ struct HomeView: View {
 
     var body: some View {
         List {
-            if let errorMessage = viewModel.errorMessage, viewModel.products.isEmpty {
-                ContentUnavailableView("Couldn't load products",
+            if let errorMessage = viewModel.errorMessage, viewModel.items.isEmpty {
+                ContentUnavailableView("Couldn't load items",
                                        systemImage: "wifi.exclamationmark",
                                        description: Text(errorMessage))
             }
-            ForEach(viewModel.products) { product in
+            ForEach(viewModel.items) { item in
                 Button {
-                    router.push(product)
+                    router.push(item)
                 } label: {
-                    ProductRow(product: product)
+                    ItemRow(item: item)
                 }
                 .buttonStyle(.plain)
             }
         }
         .overlay {
-            if viewModel.isLoading && viewModel.products.isEmpty {
+            if viewModel.isLoading && viewModel.items.isEmpty {
                 ProgressView()
             }
         }
-        .navigationTitle("Products")
+        .navigationTitle("Items")
         .task { await viewModel.load() }
         .refreshable { await viewModel.load() }
     }
 }
 
-private struct ProductRow: View {
-    let product: Product
+private struct ItemRow: View {
+    let item: Item
 
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: product.thumbnail.flatMap(URL.init)) { image in
+            CachedAsyncImage(url: item.thumbnail.flatMap(URL.init)) { image in
                 image.resizable().aspectRatio(contentMode: .fill)
             } placeholder: {
                 Color.secondary.opacity(0.15)
@@ -56,8 +56,8 @@ private struct ProductRow: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(product.title)
-                Text(product.price, format: .currency(code: "USD"))
+                Text(item.title)
+                Text(item.price, format: .currency(code: "USD"))
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }

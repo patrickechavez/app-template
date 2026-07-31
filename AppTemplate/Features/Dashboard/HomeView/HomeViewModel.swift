@@ -11,13 +11,13 @@ import Observation
 @Observable
 @MainActor
 final class HomeViewModel {
-    private(set) var products: [Product] = []
+    private(set) var items: [Item] = []
     var isLoading = false
     var errorMessage: String?
 
-    @ObservationIgnored private let repository: ProductRepository
+    @ObservationIgnored private let repository: ItemRepository
 
-    init(repository: ProductRepository) {
+    init(repository: ItemRepository) {
         self.repository = repository
     }
 
@@ -26,7 +26,7 @@ final class HomeViewModel {
         isLoading = true
         defer { isLoading = false }
         do {
-            products = try await repository.products()
+            items = try await repository.items()
         } catch {
             errorMessage = error.localizedDescription
         }

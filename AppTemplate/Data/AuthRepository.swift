@@ -22,18 +22,18 @@ final class LiveAuthRepository: AuthRepository {
 
     func login(username: String, password: String) async throws -> String {
         let response: AuthResponse = try await api.post(
-            "auth/login",
+            Endpoints.login,
             body: LoginRequest(username: username, password: password)
         )
         return response.accessToken
     }
 
     func register(_ request: RegisterRequest) async throws -> RegisterResponse {
-        try await api.post("users/add", body: request)
+        try await api.post(Endpoints.register, body: request)
     }
 
     func requestPasswordReset(email: String) async throws {
-        // dummyjson has no reset endpoint; simulate a success after validation.
+        // No reset endpoint wired yet; simulate success after basic validation.
         guard email.contains("@"), email.contains(".") else {
             throw APIError.server(status: 400, message: "Enter a valid email address.")
         }

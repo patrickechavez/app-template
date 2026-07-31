@@ -16,33 +16,41 @@ struct LoginView: View {
     }
 
     var body: some View {
-        Form {
-            Section {
-                TextField("Username", text: $viewModel.username)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                SecureField("Password", text: $viewModel.password)
-            }
+        ScrollView {
+            VStack(spacing: 16) {
+                UsernameField(text: $viewModel.username)
+                PasswordField(text: $viewModel.password)
 
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage).foregroundStyle(.red).font(.callout)
-            }
-
-            Button {
-                Task { await viewModel.login() }
-            } label: {
-                if viewModel.isLoading {
-                    ProgressView().frame(maxWidth: .infinity)
-                } else {
-                    Text("Sign In").frame(maxWidth: .infinity)
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .font(.callout)
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            }
-            .disabled(!viewModel.canSubmit)
 
-            Section {
-                Button("Create an account") { router.push(AuthRoute.register) }
-                Button("Forgot password?") { router.push(AuthRoute.forgotPassword) }
+                Button {
+                    Task { await viewModel.login() }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView().frame(maxWidth: .infinity)
+                    } else {
+                        Text("Sign In").frame(maxWidth: .infinity)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(!viewModel.canSubmit)
+                .padding(.top, 4)
+
+                HStack {
+                    Button("Create an account") { router.push(AuthRoute.register) }
+                    Spacer()
+                    Button("Forgot password?") { router.push(AuthRoute.forgotPassword) }
+                }
+                .font(.callout)
+                .padding(.top, 4)
             }
+            .padding()
         }
         .navigationTitle("Welcome")
     }

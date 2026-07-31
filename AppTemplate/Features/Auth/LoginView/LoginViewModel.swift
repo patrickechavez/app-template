@@ -11,9 +11,8 @@ import Observation
 @Observable
 @MainActor
 final class LoginViewModel {
-    // Pre-filled with dummyjson's sample credentials for convenience.
-    var username = "emilys"
-    var password = "emilyspass"
+    var username = ""
+    var password = ""
     var isLoading = false
     var errorMessage: String?
 
