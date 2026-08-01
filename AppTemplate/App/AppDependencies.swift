@@ -66,4 +66,9 @@ final class AppDependencies {
     func makeProfileViewModel() -> ProfileViewModel {
         ProfileViewModel(repository: users, session: session, imageLoader: imageLoader)
     }
+
+    func makeHomeSheetViewModel() -> HomeSheetViewModel { HomeSheetViewModel() }
+    func makeHomeCoverViewModel() -> HomeCoverViewModel { HomeCoverViewModel() }
+    func makeProfileSheetViewModel() -> ProfileSheetViewModel { ProfileSheetViewModel() }
+    func makeProfileCoverViewModel() -> ProfileCoverViewModel { ProfileCoverViewModel() }
 }

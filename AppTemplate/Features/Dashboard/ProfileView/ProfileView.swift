@@ -11,6 +11,7 @@ import PhotosUI
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
     @State private var photoItem: PhotosPickerItem?
+    @Environment(Router.self) private var router
 
     init(viewModel: ProfileViewModel) {
         _viewModel = State(initialValue: viewModel)
@@ -63,7 +64,11 @@ struct ProfileView: View {
 
             Section {
                 Button("Sign Out", role: .destructive) {
-                    viewModel.signOut()
+                    router.present(alert: .confirmDestructive(
+                        "Sign Out?",
+                        confirm: "Sign Out",
+                        onConfirm: { viewModel.signOut() }
+                    ))
                 }
             }
         }

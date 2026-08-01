@@ -29,5 +29,6 @@ struct AuthFlowView: View {
                 }
         }
         .environment(router)
+        .appAlert($router.alert)
     }
 }
