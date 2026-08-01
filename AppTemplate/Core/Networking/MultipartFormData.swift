@@ -36,9 +36,8 @@ struct MultipartFormData {
     mutating func addImage(_ image: UIImage,
                            name: String,
                            filename: String = "image.jpg",
-                           maxDimension: CGFloat = 2048,
-                           quality: CGFloat = 0.8) {
-        guard let data = image.jpegDataForUpload(maxDimension: maxDimension, quality: quality) else { return }
+                           compression: ImageCompression = .fullScreen) {
+        guard let data = image.jpegData(for: compression) else { return }
         addFile(name, filename: filename, mimeType: "image/jpeg", data: data)
     }
 

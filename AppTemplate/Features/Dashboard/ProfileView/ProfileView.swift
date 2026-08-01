@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-import PhotosUI
+import UIKit
 
 struct ProfileView: View {
     @State private var viewModel: ProfileViewModel
-    @State private var photoItem: PhotosPickerItem?
+    @State private var pickedImage: UIImage?
     @Environment(Router.self) private var router
 
     init(viewModel: ProfileViewModel) {
@@ -39,7 +39,7 @@ struct ProfileView: View {
                     }
                     .padding(.vertical, 4)
 
-                    PhotosPicker(selection: $photoItem, matching: .images) {
+                    ImagePicker(image: $pickedImage) {
                         Label("Change Photo", systemImage: "photo")
                     }
                     .disabled(viewModel.isUploadingAvatar)
@@ -79,12 +79,9 @@ struct ProfileView: View {
         }
         .navigationTitle("Profile")
         .task { await viewModel.load() }
-        .onChange(of: photoItem) { _, newItem in
-            Task {
-                if let data = try? await newItem?.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
-                    await viewModel.uploadAvatar(image)
-                }
+        .onChange(of: pickedImage) { _, image in
+            if let image {
+                Task { await viewModel.uploadAvatar(image) }
             }
         }
     }

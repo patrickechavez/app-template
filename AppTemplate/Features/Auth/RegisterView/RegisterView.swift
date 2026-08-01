@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-import PhotosUI
+import UIKit
 
 struct RegisterView: View {
     @State private var viewModel: RegisterViewModel
-    @State private var photoItem: PhotosPickerItem?
     @Environment(Router.self) private var router
 
     init(viewModel: RegisterViewModel) {
@@ -55,14 +54,6 @@ struct RegisterView: View {
         }
         .navigationTitle("Register")
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: photoItem) { _, newItem in
-            Task {
-                if let data = try? await newItem?.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
-                    viewModel.selectedImage = image
-                }
-            }
-        }
         .alert("Account created", isPresented: $viewModel.didRegister) {
             Button("Back to sign in") { router.pop() }
         } message: {
@@ -71,7 +62,7 @@ struct RegisterView: View {
     }
 
     private var avatarPicker: some View {
-        PhotosPicker(selection: $photoItem, matching: .images) {
+        ImagePicker(image: $viewModel.selectedImage) {
             ZStack {
                 if let image = viewModel.selectedImage {
                     Image(uiImage: image)
