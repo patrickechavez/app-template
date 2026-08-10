@@ -21,7 +21,7 @@ xcodebuild -scheme Development -destination 'platform=iOS Simulator,name=iPhone 
 - **Navigation** — typed routes, deep links, universal links, deferred links, force-update gate
 - **UI** — design system, unified `LoadState`, empty / error / skeleton states, accessibility identifiers, localization via String Catalog
 - **Images** — bounded two-tier cache with LRU eviction and in-flight de-duplication
-- **Build** — three environments, privacy manifest, SwiftLint + SwiftFormat, CI
+- **Build** — three environments, privacy manifest, SwiftLint + SwiftFormat
 
 ## Architecture
 
