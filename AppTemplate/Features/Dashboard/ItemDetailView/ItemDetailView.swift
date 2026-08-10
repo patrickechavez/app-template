@@ -1,41 +1,80 @@
 //
 //  ItemDetailView.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
 import SwiftUI
 
 struct ItemDetailView: View {
+
     @State private var viewModel: ItemDetailViewModel
 
     init(viewModel: ItemDetailViewModel) {
-        _viewModel = State(initialValue: viewModel)
+        _viewModel = State(wrappedValue: viewModel)
     }
 
     var body: some View {
+        AsyncContentView(
+            state: viewModel.state,
+            emptyTitle: "Item unavailable",
+            emptyIcon: "questionmark.folder",
+            retry: { await viewModel.load() }
+        ) { item in
+            detail(item)
+        }
+        .navigationTitle(viewModel.state.value?.title ?? "")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+
+            guard viewModel.state.needsLoad else { return }
+            await viewModel.load()
+        }
+        .refreshable {
+            await viewModel.load(isRefresh: true)
+        }
+    }
+
+    private func detail(_ item: Item) -> some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                CachedAsyncImage(url: viewModel.item.thumbnail.flatMap(URL.init)) { image in
+            VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
+                CachedAsyncImage(url: item.thumbnailURL) { image in
                     image.resizable().aspectRatio(contentMode: .fit)
                 } placeholder: {
-                    Color.secondary.opacity(0.15)
+                    SkeletonView(cornerRadius: Theme.Radius.lg)
+                        .aspectRatio(4 / 3, contentMode: .fit)
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 220)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.lg))
 
-                Text(viewModel.item.price, format: .currency(code: "USD"))
-                    .font(.title2).bold()
+                VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
+                    Text(item.title)
+                        .font(Theme.Font.sectionTitle)
+                        .testID(AccessibilityID.ItemDetail.title)
 
-                Text(viewModel.item.description)
-                    .foregroundStyle(.secondary)
+                    Text(item.price, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                        .font(Theme.Font.cardTitle)
+                        .foregroundStyle(Theme.Color.accent)
+                        .testID(AccessibilityID.ItemDetail.price)
+                }
+
+                Text(item.description)
+                    .font(Theme.Font.body)
+                    .foregroundStyle(Theme.Color.secondaryText)
             }
-            .padding()
+            .padding(Theme.Spacing.lg)
         }
-        .navigationTitle(viewModel.item.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .task { await viewModel.refresh() }
     }
 }
+
+#if DEBUG
+
+#Preview {
+    PreviewHost { dependencies in
+        NavigationStack {
+            ItemDetailView(viewModel: dependencies.makeItemDetailViewModel(id: 1))
+        }
+    }
+}
+
+#endif

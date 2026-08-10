@@ -1,7 +1,6 @@
 //
 //  ImageCompression.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
@@ -10,7 +9,7 @@ import UIKit
 struct ImageCompression {
     let maxDimension: CGFloat
     let quality: CGFloat
-    var maxBytes: Int? = nil
+    var maxBytes: Int?
 
     static let thumbnail = ImageCompression(maxDimension: 256, quality: 0.7)
     static let profile = ImageCompression(maxDimension: 512, quality: 0.8)

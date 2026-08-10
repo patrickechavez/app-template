@@ -1,7 +1,6 @@
 //
 //  ProfileSheetViewModel.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 

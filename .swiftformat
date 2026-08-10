@@ -1,0 +1,52 @@
+# SwiftFormat configuration
+#
+# Install:  brew install swiftformat
+# Run:      swiftformat .
+# Check:    swiftformat --lint .    (what CI does)
+#
+# SwiftFormat owns whitespace and ordering; SwiftLint owns semantics. They are
+# configured not to fight each other.
+
+--swiftversion 6.0
+
+# MARK: - Files
+--exclude .build,DerivedData,**/Generated
+
+# MARK: - Formatting
+--indent 4
+--maxwidth 120
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen balanced
+--trimwhitespace always
+--commas inline
+--semicolons never
+--stripunusedargs closure-only
+
+# MARK: - Style
+--self remove
+--importgrouping testable-bottom
+--marktypes always
+--typemark "MARK: - %t"
+--extensionacl on-declarations
+--patternlet hoist
+--redundanttype inferred
+--emptybraces no-space
+--voidtype void
+
+# MARK: - Rules
+#
+# organizeDeclarations groups stored properties, init, and methods into a
+# consistent order so every file in the project reads the same way.
+--enable organizeDeclarations
+--enable blankLinesBetweenScopes
+--enable isEmpty
+--enable sortImports
+--enable redundantSelf
+--enable trailingClosures
+--enable wrapMultilineStatementBraces
+
+# Disabled: fights SwiftUI's trailing-closure-heavy view builders.
+--disable wrapConditionalBodies
+--disable preferForLoop

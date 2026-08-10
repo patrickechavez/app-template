@@ -1,7 +1,6 @@
 //
 //  MultipartFormData.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
@@ -43,7 +42,7 @@ struct MultipartFormData {
 
     func encoded() -> Data {
         var data = body
-        data.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        data.append(Data("--\(boundary)--\r\n".utf8))
         return data
     }
 

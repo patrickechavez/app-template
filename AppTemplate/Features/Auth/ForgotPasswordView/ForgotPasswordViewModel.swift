@@ -1,7 +1,6 @@
 //
 //  ForgotPasswordViewModel.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
@@ -11,28 +10,52 @@ import Observation
 @Observable
 @MainActor
 final class ForgotPasswordViewModel {
+
     var email = ""
-    var isLoading = false
-    var errorMessage: String?
-    var didSend = false
+    let action = ActionState()
 
-    @ObservationIgnored private let auth: AuthRepository
+    private(set) var didSend = false
 
-    init(auth: AuthRepository) {
+    @ObservationIgnored private let auth: any AuthRepository
+
+    init(auth: any AuthRepository) {
         self.auth = auth
     }
 
-    var canSubmit: Bool { !email.isEmpty && !isLoading }
+    var canSubmit: Bool {
+        email.trimmed.isValidEmail && !action.isRunning
+    }
+
+    var emailError: String? {
+        if let serverMessage = action.message(for: "email") { return serverMessage }
+        guard !email.isEmpty, !email.trimmed.isValidEmail else { return nil }
+        return String(
+            localized: "Enter a valid email address.",
+            comment: "Validation message shown for a malformed email address"
+        )
+    }
+
+    var generalError: String? {
+        guard action.error?.validationErrors == nil else { return nil }
+        return action.errorMessage
+    }
+
+    var confirmation: String {
+        String(
+            localized: "If an account exists for that address, we've sent a link to reset your password.",
+            comment: "Confirmation shown after requesting a password reset"
+        )
+    }
 
     func submit() async {
-        errorMessage = nil
-        isLoading = true
-        defer { isLoading = false }
-        do {
-            try await auth.requestPasswordReset(email: email)
-            didSend = true
-        } catch {
-            errorMessage = error.localizedDescription
+        guard canSubmit else { return }
+
+        let address = email.trimmed
+        let result: Void? = await action.run { [auth] in
+            try await auth.requestPasswordReset(email: address)
         }
+        guard result != nil else { return }
+
+        didSend = true
     }
 }

@@ -1,116 +1,252 @@
 //
 //  APIClient.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
 import Foundation
+import os
 
-enum APIError: LocalizedError {
-    case invalidResponse
-    case unauthorized
-    case server(status: Int, message: String?)
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidResponse:
-            return "The server returned an invalid response."
-        case .unauthorized:
-            return "Your session has expired. Please sign in again."
-        case .server(_, let message):
-            return message ?? "Something went wrong. Please try again."
-        }
-    }
+struct EmptyResponse: Decodable, Sendable, Equatable {
+    init() {}
+    init(from decoder: any Decoder) throws { self.init() }
 }
 
-protocol APIClient {
-    func get<T: Decodable>(_ path: String, query: [URLQueryItem]) async throws -> T
-    func post<Body: Encodable, T: Decodable>(_ path: String, body: Body) async throws -> T
-    func upload<T: Decodable>(_ path: String, multipart: MultipartFormData) async throws -> T
+protocol APIClient: Sendable {
+    func send<T: Decodable & Sendable>(_ endpoint: Endpoint, as type: T.Type) async throws -> T
 }
 
 extension APIClient {
-    // Convenience for a GET without query parameters.
-    func get<T: Decodable>(_ path: String) async throws -> T {
-        try await get(path, query: [])
+
+    func send<T: Decodable & Sendable>(_ endpoint: Endpoint) async throws -> T {
+        try await send(endpoint, as: T.self)
+    }
+
+    func send(_ endpoint: Endpoint) async throws {
+        _ = try await send(endpoint, as: EmptyResponse.self)
+    }
+
+    func get<T: Decodable & Sendable>(
+        _ path: String,
+        query: [URLQueryItem] = [],
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        try await send(.get(path, query: query, requiresAuth: requiresAuth), as: T.self)
+    }
+
+    func post<T: Decodable & Sendable>(
+        _ path: String,
+        body: some Encodable,
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        try await send(try .post(path, body: body, requiresAuth: requiresAuth), as: T.self)
+    }
+
+    func post(_ path: String, body: some Encodable, requiresAuth: Bool = true) async throws {
+        _ = try await send(try .post(path, body: body, requiresAuth: requiresAuth), as: EmptyResponse.self)
+    }
+
+    func put<T: Decodable & Sendable>(
+        _ path: String,
+        body: some Encodable,
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        try await send(try .put(path, body: body, requiresAuth: requiresAuth), as: T.self)
+    }
+
+    func patch<T: Decodable & Sendable>(
+        _ path: String,
+        body: some Encodable,
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        try await send(try .patch(path, body: body, requiresAuth: requiresAuth), as: T.self)
+    }
+
+    func delete(_ path: String, requiresAuth: Bool = true) async throws {
+        _ = try await send(.delete(path, requiresAuth: requiresAuth), as: EmptyResponse.self)
+    }
+
+    func upload<T: Decodable & Sendable>(
+        _ path: String,
+        form: MultipartFormData,
+        method: HTTPMethod = .post,
+        requiresAuth: Bool = true
+    ) async throws -> T {
+        try await send(.upload(path, form: form, method: method, requiresAuth: requiresAuth), as: T.self)
     }
 }
 
-final class URLSessionAPIClient: APIClient {
+nonisolated final class URLSessionAPIClient: APIClient {
+
     private let baseURL: URL
-    private let tokenStore: TokenStore
-    private let metadata: RequestMetadataProviding
     private let session: URLSession
-    private let encoder = JSONEncoder.api
-    private let decoder = JSONDecoder.api
+    private let interceptors: [any RequestInterceptor]
+    private let retryPolicy: RetryPolicy
+    private let defaultTimeout: TimeInterval
 
-    init(baseURL: URL,
-         tokenStore: TokenStore,
-         metadata: RequestMetadataProviding = ClientMetadata(),
-         session: URLSession = .shared) {
+    private static let maxInterceptorRetries = 1
+
+    init(
+        baseURL: URL = APIConfig.baseURL,
+        session: URLSession = .shared,
+        interceptors: [any RequestInterceptor] = [],
+        retryPolicy: RetryPolicy = APIConfig.retryPolicy,
+        defaultTimeout: TimeInterval = APIConfig.timeout
+    ) {
         self.baseURL = baseURL
-        self.tokenStore = tokenStore
-        self.metadata = metadata
         self.session = session
+        self.interceptors = interceptors
+        self.retryPolicy = retryPolicy
+        self.defaultTimeout = defaultTimeout
     }
 
-    func get<T: Decodable>(_ path: String, query: [URLQueryItem]) async throws -> T {
-        try await send(path, method: "GET", query: query, body: nil)
+    func send<T: Decodable & Sendable>(_ endpoint: Endpoint, as type: T.Type) async throws -> T {
+        let data = try await perform(endpoint)
+
+        if data.isEmpty || data.count <= 2 {
+            if let empty = EmptyResponse() as? T { return empty }
+        }
+
+        do {
+            return try JSONDecoder.api.decode(T.self, from: data)
+        } catch {
+
+            let detail = Self.describe(decodingError: error, type: T.self)
+            AppLogger.network.error(
+                "Decoding failed for \(endpoint.path, privacy: .public): \(detail, privacy: .public)"
+            )
+            throw APIError.decodingFailed(detail: detail)
+        }
     }
 
-    func post<Body: Encodable, T: Decodable>(_ path: String, body: Body) async throws -> T {
-        try await send(path, method: "POST", body: try encoder.encode(body))
-    }
+    private func perform(_ endpoint: Endpoint) async throws -> Data {
+        var attempt = 0
+        var interceptorRetries = 0
 
-    func upload<T: Decodable>(_ path: String, multipart: MultipartFormData) async throws -> T {
-        try await send(path,
-                       method: "POST",
-                       body: multipart.encoded(),
-                       contentType: multipart.contentType)
-    }
+        while true {
+            attempt += 1
 
-    private func send<T: Decodable>(_ path: String,
-                                    method: String,
-                                    query: [URLQueryItem] = [],
-                                    body: Data?,
-                                    contentType: String? = nil) async throws -> T {
-        var url = baseURL.appendingPathComponent(path)
-        if !query.isEmpty {
-            guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-                throw APIError.invalidResponse
+            try Task.checkCancellation()
+
+            let apiError: APIError
+            do {
+
+                return try await attemptOnce(endpoint)
+            } catch let error as APIError {
+                apiError = error
+            } catch {
+                apiError = APIError.from(transportError: error)
             }
-            components.queryItems = query
-            guard let composed = components.url else { throw APIError.invalidResponse }
-            url = composed
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = method
 
-        // App + device metadata on every request.
-        for (field, value) in metadata.headers {
-            request.setValue(value, forHTTPHeaderField: field)
-        }
+            if apiError == .cancelled { throw apiError }
 
-        if let body {
-            request.httpBody = body
-            request.setValue(contentType ?? "application/json", forHTTPHeaderField: "Content-Type")
+            switch await recoveryDecision(for: apiError, endpoint: endpoint, attempt: attempt) {
+            case let .fail(replacement):
+                throw replacement
+
+            case .retry:
+                guard interceptorRetries < Self.maxInterceptorRetries else {
+                    AppLogger.network.error(
+                        "Giving up on \(endpoint.path, privacy: .public): recovery did not resolve the failure"
+                    )
+                    throw apiError
+                }
+                interceptorRetries += 1
+
+                continue
+
+            case .proceed:
+                break
+            }
+
+            guard retryPolicy.shouldRetry(
+                apiError,
+                attempt: attempt,
+                method: endpoint.method,
+                sentBody: endpoint.body != nil
+            ) else {
+                throw apiError
+            }
+
+            let delay = retryPolicy.delay(afterAttempt: attempt, error: apiError)
+            AppLogger.network.debug(
+                """
+                Retrying \(endpoint.method.rawValue, privacy: .public) \
+                \(endpoint.path, privacy: .public) after \(delay.seconds, privacy: .public)s \
+                (attempt \(attempt + 1, privacy: .public))
+                """
+            )
+            try await Task.sleep(for: delay)
         }
-        if let token = tokenStore.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    }
+
+    private func attemptOnce(_ endpoint: Endpoint) async throws -> Data {
+        var request = try endpoint.urlRequest(baseURL: baseURL, defaultTimeout: defaultTimeout)
+        for interceptor in interceptors {
+            request = try await interceptor.adapt(request, for: endpoint)
         }
 
         let (data, response) = try await session.data(for: request)
+
         guard let http = response as? HTTPURLResponse else {
             throw APIError.invalidResponse
         }
-        switch http.statusCode {
-        case 200..<300:
-            return try decoder.decode(T.self, from: data)
-        case 401:
-            throw APIError.unauthorized
-        default:
-            throw APIError.server(status: http.statusCode, message: nil)
+
+        for interceptor in interceptors {
+            await interceptor.didReceive(http, data: data, for: endpoint)
         }
+
+        guard !(200..<300).contains(http.statusCode) else {
+            return data
+        }
+
+        throw APIError.from(
+            statusCode: http.statusCode,
+            data: data,
+            headers: http.allHeaderFields
+        )
+    }
+
+    private func recoveryDecision(
+        for error: APIError,
+        endpoint: Endpoint,
+        attempt: Int
+    ) async -> InterceptorDecision {
+        for interceptor in interceptors {
+            let decision = await interceptor.handle(error, for: endpoint, attempt: attempt)
+            if decision != .proceed { return decision }
+        }
+        return .proceed
+    }
+
+    private static func describe(decodingError error: any Error, type: Any.Type) -> String {
+        guard let error = error as? DecodingError else {
+            return "\(type): \(error.localizedDescription)"
+        }
+
+        func path(_ context: DecodingError.Context) -> String {
+            let keys = context.codingPath.map(\.stringValue)
+            return keys.isEmpty ? "<root>" : keys.joined(separator: ".")
+        }
+
+        return switch error {
+        case let .keyNotFound(key, context):
+            "\(type): missing key '\(key.stringValue)' at \(path(context))"
+        case let .typeMismatch(expected, context):
+            "\(type): expected \(expected) at \(path(context))"
+        case let .valueNotFound(expected, context):
+            "\(type): null value for non-optional \(expected) at \(path(context))"
+        case let .dataCorrupted(context):
+            "\(type): corrupted data at \(path(context)) — \(context.debugDescription)"
+        @unknown default:
+            "\(type): \(error.localizedDescription)"
+        }
+    }
+}
+
+private extension Duration {
+
+    var seconds: Double {
+        Double(components.seconds) + Double(components.attoseconds) / 1e18
     }
 }

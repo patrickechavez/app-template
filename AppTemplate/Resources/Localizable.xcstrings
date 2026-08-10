@@ -1,0 +1,882 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "*" : {
+
+    },
+    "Account" : {
+      "comment" : "Header of the account section on the profile screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
+    "Account created" : {
+      "comment" : "Title of the registration success alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account created"
+          }
+        }
+      }
+    },
+    "Back Soon" : {
+
+    },
+    "Cancelled." : {
+      "comment" : "A request was cancelled",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled."
+          }
+        }
+      }
+    },
+    "Change Photo" : {
+      "comment" : "Button that opens the photo picker",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change Photo"
+          }
+        }
+      }
+    },
+    "Check your email" : {
+      "comment" : "Title shown after a password reset is requested",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check your email"
+          }
+        }
+      }
+    },
+    "Choose a new password for your account." : {
+      "comment" : "Explanatory text on the reset-password screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a new password for your account."
+          }
+        }
+      }
+    },
+    "Choose a Password" : {
+      "comment" : "Title of the reset-password screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose a Password"
+          }
+        }
+      }
+    },
+    "Clear search" : {
+      "comment" : "Accessibility label for the clear-search button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear search"
+          }
+        }
+      }
+    },
+    "Close" : {
+
+    },
+    "Confirm password" : {
+      "comment" : "Label for the password confirmation field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm password"
+          }
+        }
+      }
+    },
+    "Create Account" : {
+      "comment" : "Primary button on the registration screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Account"
+          }
+        }
+      }
+    },
+    "Create an account" : {
+      "comment" : "Link to the registration screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create an account"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "comment" : "Accessibility label for a date field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        }
+      }
+    },
+    "Done" : {
+
+    },
+    "Edit Profile" : {
+      "comment" : "Title of the placeholder edit-profile screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Profile"
+          }
+        }
+      }
+    },
+    "Email" : {
+      "comment" : "Label for the email field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        }
+      }
+    },
+    "Enter a valid email address." : {
+      "comment" : "Validation message shown for a malformed email address",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter a valid email address."
+          }
+        }
+      }
+    },
+    "Enter the email address for your account and we'll send you a link to reset your password." : {
+      "comment" : "Explanatory text on the forgot-password screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter the email address for your account and we'll send you a link to reset your password."
+          }
+        }
+      }
+    },
+    "First name" : {
+      "comment" : "Placeholder for the first name field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "First name"
+          }
+        }
+      }
+    },
+    "Forgot password?" : {
+      "comment" : "Link to the password reset screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forgot password?"
+          }
+        }
+      }
+    },
+    "Full-Screen Cover" : {
+
+    },
+    "Hide password" : {
+      "comment" : "Accessibility label for the password reveal toggle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide password"
+          }
+        }
+      }
+    },
+    "If an account exists for that address, we've sent a link to reset your password." : {
+      "comment" : "Confirmation shown after requesting a password reset",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If an account exists for that address, we've sent a link to reset your password."
+          }
+        }
+      }
+    },
+    "Item unavailable" : {
+
+    },
+    "Items" : {
+      "comment" : "Home tab title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Items"
+          }
+        }
+      }
+    },
+    "Items you add will appear here." : {
+
+    },
+    "Last name" : {
+      "comment" : "Placeholder for the last name field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last name"
+          }
+        }
+      }
+    },
+    "Loading" : {
+      "comment" : "Accessibility label for a loading spinner",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading"
+          }
+        }
+      }
+    },
+    "Loading more items" : {
+      "comment" : "Accessibility label for the pagination spinner",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading more items"
+          }
+        }
+      }
+    },
+    "More" : {
+      "comment" : "Accessibility label for the overflow menu",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
+          }
+        }
+      }
+    },
+    "name@example.com" : {
+      "comment" : "Placeholder for the email field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "name@example.com"
+          }
+        }
+      }
+    },
+    "New password" : {
+      "comment" : "Label for the new password field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New password"
+          }
+        }
+      }
+    },
+    "No access" : {
+
+    },
+    "No items yet" : {
+
+    },
+    "No matches" : {
+
+    },
+    "Not found" : {
+
+    },
+    "Nothing here yet" : {
+
+    },
+    "OK" : {
+      "comment" : "Alert dismiss button",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Password" : {
+      "comment" : "Label for the password field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
+          }
+        }
+      }
+    },
+    "Passwords don't match." : {
+      "comment" : "Validation message when passwords differ",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passwords don't match."
+          }
+        }
+      }
+    },
+    "Please check the highlighted fields." : {
+      "comment" : "Error shown when form validation fails server-side",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please check the highlighted fields."
+          }
+        }
+      }
+    },
+    "Profile" : {
+      "comment" : "Profile tab title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile"
+          }
+        }
+      }
+    },
+    "Profile photo" : {
+      "comment" : "Accessibility label for a placeholder avatar",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile photo"
+          }
+        }
+      }
+    },
+    "Profile photo for %@" : {
+
+    },
+    "Profile unavailable" : {
+
+    },
+    "Reset Password" : {
+      "comment" : "Title of the forgot-password screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset Password"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "comment" : "Placeholder for a search field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        }
+      }
+    },
+    "Search items" : {
+      "comment" : "Placeholder in the items search field",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search items"
+          }
+        }
+      }
+    },
+    "Send Reset Link" : {
+      "comment" : "Button that requests a password reset email",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send Reset Link"
+          }
+        }
+      }
+    },
+    "Set New Password" : {
+      "comment" : "Button that submits a new password",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set New Password"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "comment" : "Title of the placeholder settings screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Sheet" : {
+
+    },
+    "Show Cover" : {
+      "comment" : "Menu item that presents an example full-screen cover",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Cover"
+          }
+        }
+      }
+    },
+    "Show password" : {
+      "comment" : "Accessibility label for the password reveal toggle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show password"
+          }
+        }
+      }
+    },
+    "Show Sheet" : {
+      "comment" : "Menu item that presents an example sheet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Sheet"
+          }
+        }
+      }
+    },
+    "Sign In" : {
+      "comment" : "Primary button on the sign-in screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign In"
+          }
+        }
+      }
+    },
+    "Sign Out" : {
+      "comment" : "Confirm button of the sign-out alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign Out"
+          }
+        }
+      }
+    },
+    "Sign out of your account?" : {
+      "comment" : "Title of the sign-out confirmation alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign out of your account?"
+          }
+        }
+      }
+    },
+    "Something went wrong" : {
+
+    },
+    "Something went wrong on our end. Please try again." : {
+      "comment" : "Generic server error",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong on our end. Please try again."
+          }
+        }
+      }
+    },
+    "Something went wrong. Please try again." : {
+      "comment" : "Generic error for an unexpected response",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something went wrong. Please try again."
+          }
+        }
+      }
+    },
+    "Starting up" : {
+      "comment" : "Accessibility label for the launch screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting up"
+          }
+        }
+      }
+    },
+    "Temporarily unavailable" : {
+
+    },
+    "That conflicts with something that already exists." : {
+      "comment" : "Error shown on a 409 conflict",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That conflicts with something that already exists."
+          }
+        }
+      }
+    },
+    "That took too long" : {
+
+    },
+    "The request took too long. Please try again." : {
+      "comment" : "Error shown when a network request times out",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The request took too long. Please try again."
+          }
+        }
+      }
+    },
+    "The service is temporarily unavailable for maintenance." : {
+      "comment" : "Error shown when the backend is in maintenance mode",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The service is temporarily unavailable for maintenance."
+          }
+        }
+      }
+    },
+    "This version of the app is no longer supported. Please update." : {
+      "comment" : "Error shown when the app build is too old for the API",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This version of the app is no longer supported. Please update."
+          }
+        }
+      }
+    },
+    "This version of the app is no longer supported. Update to keep going." : {
+      "comment" : "Message shown when the app build is too old for the API",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This version of the app is no longer supported. Update to keep going."
+          }
+        }
+      }
+    },
+    "Too many attempts. Please wait a moment and try again." : {
+      "comment" : "Error shown when rate limited",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Too many attempts. Please wait a moment and try again."
+          }
+        }
+      }
+    },
+    "Try a different search term." : {
+
+    },
+    "Try Again" : {
+      "comment" : "Button that retries a failed network request",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        }
+      }
+    },
+    "Update Now" : {
+      "comment" : "Button that opens the App Store listing",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Now"
+          }
+        }
+      }
+    },
+    "Update required" : {
+
+    },
+    "Update Required" : {
+
+    },
+    "Use at least %lld characters." : {
+      "comment" : "Validation message shown when a password is too short"
+    },
+    "User ID" : {
+      "comment" : "Label for the user ID row on the profile screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "User ID"
+          }
+        }
+      }
+    },
+    "Username" : {
+      "comment" : "Label for the username row on the profile screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Username"
+          }
+        }
+      }
+    },
+    "We couldn't find what you were looking for." : {
+      "comment" : "Error shown when a resource does not exist",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We couldn't find what you were looking for."
+          }
+        }
+      }
+    },
+    "We couldn't reach the server. Please try again." : {
+      "comment" : "Generic network transport failure",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We couldn't reach the server. Please try again."
+          }
+        }
+      }
+    },
+    "We're doing some maintenance. Please try again in a few minutes." : {
+      "comment" : "Message shown when the backend is in maintenance mode",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We're doing some maintenance. Please try again in a few minutes."
+          }
+        }
+      }
+    },
+    "Welcome" : {
+      "comment" : "Title of the sign-in screen",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcome"
+          }
+        }
+      }
+    },
+    "You appear to be offline. Check your connection and try again." : {
+      "comment" : "Error shown when the device has no network connection",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You appear to be offline. Check your connection and try again."
+          }
+        }
+      }
+    },
+    "You can now sign in with your new account." : {
+      "comment" : "Message of the registration success alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can now sign in with your new account."
+          }
+        }
+      }
+    },
+    "You don't have permission to do that." : {
+      "comment" : "Error shown when the user lacks permission",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have permission to do that."
+          }
+        }
+      }
+    },
+    "You'll need to sign in again to use the app." : {
+      "comment" : "Message of the sign-out confirmation alert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You'll need to sign in again to use the app."
+          }
+        }
+      }
+    },
+    "You're offline" : {
+
+    },
+    "Your session has expired. Please sign in again." : {
+      "comment" : "Error shown when the session is no longer valid",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your session has expired. Please sign in again."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -1,15 +1,21 @@
 //
 //  LoginView.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
 import SwiftUI
 
 struct LoginView: View {
+
     @State private var viewModel: LoginViewModel
-    @Environment(Router.self) private var router
+    @Environment(Router<AuthRoute>.self) private var router
+
+    @FocusState private var focusedField: Field?
+
+    private enum Field: Hashable {
+        case username, password
+    }
 
     init(viewModel: LoginViewModel) {
         _viewModel = State(wrappedValue: viewModel)
@@ -17,41 +23,88 @@ struct LoginView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 16) {
-                UsernameField(text: $viewModel.username)
-                PasswordField(text: $viewModel.password)
+            VStack(spacing: Theme.Spacing.lg) {
+                UsernameField(
+                    text: $viewModel.username,
+                    error: viewModel.usernameError,
+                    identifier: AccessibilityID.Auth.usernameField
+                )
+                .focused($focusedField, equals: .username)
+                .submitLabel(.next)
+                .onSubmit { focusedField = .password }
 
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .font(.callout)
-                        .foregroundStyle(.red)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                PasswordField(
+                    text: $viewModel.password,
+                    error: viewModel.passwordError,
+                    identifier: AccessibilityID.Auth.passwordField
+                )
+                .focused($focusedField, equals: .password)
+                .submitLabel(.go)
+                .onSubmit { submit() }
+
+                if let error = viewModel.generalError {
+                    InlineErrorText(error)
+                        .testID(AccessibilityID.Auth.errorMessage)
                 }
 
-                Button {
-                    Task { await viewModel.login() }
-                } label: {
-                    if viewModel.isLoading {
-                        ProgressView().frame(maxWidth: .infinity)
-                    } else {
-                        Text("Sign In").frame(maxWidth: .infinity)
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                AsyncButton(
+                    title: Text("Sign In", comment: "Primary button on the sign-in screen"),
+                    isRunning: viewModel.action.isRunning,
+                    action: { await viewModel.signIn() }
+                )
                 .disabled(!viewModel.canSubmit)
-                .padding(.top, 4)
+                .testID(AccessibilityID.Auth.signInButton)
 
                 HStack {
-                    Button("Create an account") { router.push(AuthRoute.register) }
+                    Button {
+                        router.push(.register)
+                    } label: {
+                        Text("Create an account", comment: "Link to the registration screen")
+                    }
+                    .testID(AccessibilityID.Auth.registerButton)
+
                     Spacer()
-                    Button("Forgot password?") { router.push(AuthRoute.forgotPassword) }
+
+                    Button {
+                        router.push(.forgotPassword)
+                    } label: {
+                        Text("Forgot password?", comment: "Link to the password reset screen")
+                    }
+                    .testID(AccessibilityID.Auth.forgotPasswordButton)
                 }
-                .font(.callout)
-                .padding(.top, 4)
+                .font(Theme.Font.secondary)
+                .padding(.top, Theme.Spacing.xs)
             }
-            .padding()
+            .padding(Theme.Spacing.lg)
         }
-        .navigationTitle("Welcome")
+        .scrollDismissesKeyboard(.interactively)
+        .navigationTitle(Text("Welcome", comment: "Title of the sign-in screen"))
+    }
+
+    private func submit() {
+        focusedField = nil
+        Task { await viewModel.signIn() }
     }
 }
+
+#if DEBUG
+
+#Preview("Sign in") {
+    PreviewHost { dependencies in
+        NavigationStack {
+            LoginView(viewModel: dependencies.makeLoginViewModel())
+        }
+        .environment(Router<AuthRoute>())
+    }
+}
+
+#Preview("Sign in — wrong password") {
+    PreviewHost(scenario: .failure(.unauthorized(message: "Incorrect username or password."))) { dependencies in
+        NavigationStack {
+            LoginView(viewModel: dependencies.makeLoginViewModel())
+        }
+        .environment(Router<AuthRoute>())
+    }
+}
+
+#endif

@@ -1,0 +1,31 @@
+//
+//  Production.xcconfig
+//  AppTemplate
+//
+//  App Store builds. This is the only configuration real users ever run —
+//  treat every value here as load-bearing.
+//
+
+#include "Shared.xcconfig"
+
+// MARK: - Identity
+// No suffix: this is the canonical bundle ID that ships to the App Store.
+APP_BUNDLE_ID = $(APP_BUNDLE_PREFIX).$(APP_NAME)
+APP_DISPLAY_NAME = App Template
+APP_URL_SCHEME = apptemplate
+
+// MARK: - API
+//
+// ⚠️ REPLACE THIS BEFORE SHIPPING. It currently points at a public sample API.
+// `Scripts/preflight.sh` fails if this still contains "dummyjson", so a
+// placeholder cannot reach the App Store unnoticed. CI runs it on every build.
+API_BASE_URL = https:/$()/dummyjson.com
+
+// Never YES. Request logs contain bearer tokens.
+API_LOGGING_ENABLED = NO
+
+API_TIMEOUT_SECONDS = 30
+API_MAX_RETRIES = 2
+
+// MARK: - Build
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) PRODUCTION

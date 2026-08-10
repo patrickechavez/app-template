@@ -1,42 +1,61 @@
 //
 //  AuthRepository.swift
 //  AppTemplate
-//
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
 import Foundation
 
-protocol AuthRepository {
-    func login(username: String, password: String) async throws -> String
+protocol AuthRepository: Sendable {
+    func login(username: String, password: String) async throws -> AuthTokens
     func register(_ request: RegisterRequest) async throws -> RegisterResponse
     func requestPasswordReset(email: String) async throws
+    func resetPassword(token: String, newPassword: String) async throws
+    func logout(refreshToken: String?) async throws
 }
 
-final class LiveAuthRepository: AuthRepository {
-    private let api: APIClient
+nonisolated struct LiveAuthRepository: AuthRepository {
 
-    init(api: APIClient) {
+    private let api: any APIClient
+
+    init(api: any APIClient) {
         self.api = api
     }
 
-    func login(username: String, password: String) async throws -> String {
+    func login(username: String, password: String) async throws -> AuthTokens {
         let response: AuthResponse = try await api.post(
-            Endpoints.login,
-            body: LoginRequest(username: username, password: password)
+            APIRoute.Auth.login,
+            body: LoginRequest(username: username, password: password),
+            requiresAuth: false
         )
-        return response.accessToken
+        return response.tokens
     }
 
     func register(_ request: RegisterRequest) async throws -> RegisterResponse {
-        try await api.post(Endpoints.register, body: request)
+        try await api.post(APIRoute.Auth.register, body: request, requiresAuth: false)
     }
 
     func requestPasswordReset(email: String) async throws {
-        // No reset endpoint wired yet; simulate success after basic validation.
-        guard email.contains("@"), email.contains(".") else {
-            throw APIError.server(status: 400, message: "Enter a valid email address.")
-        }
-        try await Task.sleep(nanoseconds: 400_000_000)
+        try await api.post(
+            APIRoute.Auth.requestPasswordReset,
+            body: ForgotPasswordRequest(email: email),
+            requiresAuth: false
+        )
+    }
+
+    func resetPassword(token: String, newPassword: String) async throws {
+        try await api.post(
+            APIRoute.Auth.resetPassword,
+            body: ResetPasswordRequest(token: token, password: newPassword),
+            requiresAuth: false
+        )
+    }
+
+    func logout(refreshToken: String?) async throws {
+
+        try await api.post(
+            APIRoute.Auth.logout,
+            body: LogoutRequest(refreshToken: refreshToken)
+        )
     }
 }
