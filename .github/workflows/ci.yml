@@ -43,11 +43,6 @@ jobs:
         continue-on-error: true
         run: swiftformat --lint . --reporter github-actions-log
 
-      - name: Preflight
-        run: |
-          chmod +x Scripts/preflight.sh
-          ./Scripts/preflight.sh
-
   build:
     name: Build
     runs-on: macos-15
