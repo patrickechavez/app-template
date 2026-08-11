@@ -95,16 +95,11 @@ private struct HomeTab: View {
     }
 }
 
-private enum ProfileSheet: Identifiable { case example; var id: Self { self } }
-private enum ProfileCover: Identifiable { case example; var id: Self { self } }
-
 private struct ProfileTab: View {
 
     let dependencies: AppDependencies
 
     @Environment(AppNavigator.self) private var navigator
-    @State private var sheet: ProfileSheet?
-    @State private var cover: ProfileCover?
 
     var body: some View {
         @Bindable var router = navigator.profile
@@ -114,45 +109,13 @@ private struct ProfileTab: View {
                 .navigationDestination(for: ProfileRoute.self) { route in
                     switch route {
                     case .editProfile:
-
                         Text("Edit Profile", comment: "Title of the placeholder edit-profile screen")
                     case .settings:
                         Text("Settings", comment: "Title of the placeholder settings screen")
                     }
                 }
-                .toolbar { modalMenu }
         }
         .environment(navigator.profile)
         .appAlert($router.alert)
-        .sheet(item: $sheet) { route in
-            switch route {
-            case .example: ProfileSheetView(viewModel: dependencies.makeProfileSheetViewModel())
-            }
-        }
-        .fullScreenCover(item: $cover) { route in
-            switch route {
-            case .example: ProfileCoverView(viewModel: dependencies.makeProfileCoverViewModel())
-            }
-        }
-    }
-
-    private var modalMenu: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-                Button {
-                    sheet = .example
-                } label: {
-                    Text("Show Sheet", comment: "Menu item that presents an example sheet")
-                }
-                Button {
-                    cover = .example
-                } label: {
-                    Text("Show Cover", comment: "Menu item that presents an example full-screen cover")
-                }
-            } label: {
-                Image(systemName: "ellipsis.circle")
-            }
-            .accessibilityLabel(Text("More", comment: "Accessibility label for the overflow menu"))
-        }
     }
 }

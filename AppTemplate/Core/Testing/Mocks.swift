@@ -41,95 +41,6 @@ enum SampleData {
     }
 }
 
-actor MockAPIClient: APIClient {
-
-    private(set) var sentEndpoints: [Endpoint] = []
-
-    private var responses: [String: Result<Data, APIError>] = [:]
-
-    private var fallback: Result<Data, APIError>?
-
-    var delay: Duration = .zero
-
-    init() {}
-
-    func send<T: Decodable & Sendable>(_ endpoint: Endpoint, as type: T.Type) async throws -> T {
-        sentEndpoints.append(endpoint)
-
-        if delay > .zero {
-            try await Task.sleep(for: delay)
-        }
-
-        let result = responses[endpoint.path] ?? fallback ?? .failure(
-            .server(status: 500, message: "MockAPIClient: no response registered for \(endpoint.path)")
-        )
-
-        let data = try result.get()
-
-        if data.isEmpty, let empty = EmptyResponse() as? T { return empty }
-        return try JSONDecoder.api.decode(T.self, from: data)
-    }
-
-    func stub(_ path: String, with value: some Encodable) throws {
-        responses[path] = .success(try JSONEncoder.api.encode(value))
-    }
-
-    func stub(_ path: String, raw json: String) {
-        responses[path] = .success(Data(json.utf8))
-    }
-
-    func stub(_ path: String, failure: APIError) {
-        responses[path] = .failure(failure)
-    }
-
-    func stubEverything(with value: some Encodable) throws {
-        fallback = .success(try JSONEncoder.api.encode(value))
-    }
-
-    func stubEverything(failure: APIError) {
-        fallback = .failure(failure)
-    }
-
-    func setDelay(_ delay: Duration) {
-        self.delay = delay
-    }
-
-    func endpoints(for path: String) -> [Endpoint] {
-        sentEndpoints.filter { $0.path == path }
-    }
-
-    func reset() {
-        sentEndpoints.removeAll()
-        responses.removeAll()
-        fallback = nil
-    }
-}
-
-enum MockOutcome<Value: Sendable>: Sendable {
-    case success(Value)
-    case empty
-    case failure(APIError)
-
-    case hang
-
-    func resolve() async throws -> Value {
-        switch self {
-        case let .success(value):
-            return value
-        case .empty:
-
-            if let empty = [] as? Value { return empty }
-            throw APIError.invalidResponse
-        case let .failure(error):
-            throw error
-        case .hang:
-
-            try await Task.sleep(for: .seconds(3600))
-            throw CancellationError()
-        }
-    }
-}
-
 final class MockAuthRepository: AuthRepository, @unchecked Sendable {
 
     var loginResult: Result<AuthTokens, APIError> = .success(SampleData.tokens)
@@ -277,27 +188,6 @@ actor MockImageLoader: ImageLoading {
     }
 
     func trimMemory() async {}
-}
-
-final class MockTokenRefresher: TokenRefreshing, @unchecked Sendable {
-
-    var result: Result<AuthTokens, APIError>
-    private(set) var callCount = 0
-
-    init(result: Result<AuthTokens, APIError> = .success(SampleData.tokens)) {
-        self.result = result
-    }
-
-    func refresh(using refreshToken: String) async throws -> AuthTokens {
-        callCount += 1
-
-        try await Task.sleep(for: .milliseconds(10))
-        return try result.get()
-    }
-}
-
-struct MockMetadata: RequestMetadataProviding {
-    var headers: [String: String] = ["X-Platform": "iOS", "X-App-Version": "1.0.0"]
 }
 
 #endif

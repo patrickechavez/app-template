@@ -43,16 +43,7 @@ final class AppDependencies {
         let events = SessionEventBus()
         let session = Self.urlSession()
 
-        let tokenStore: any TokenStore
-        #if DEBUG
-        if LaunchOptions.isUITesting {
-            tokenStore = InMemoryTokenStore(tokens: LaunchOptions.startsSignedOut ? nil : SampleData.tokens)
-        } else {
-            tokenStore = KeychainTokenStore()
-        }
-        #else
-        tokenStore = KeychainTokenStore()
-        #endif
+        let tokenStore: any TokenStore = KeychainTokenStore()
 
         let metadata = MetadataInterceptor()
         let logging = LoggingInterceptor()
@@ -145,6 +136,4 @@ final class AppDependencies {
 
     func makeHomeSheetViewModel() -> HomeSheetViewModel { HomeSheetViewModel() }
     func makeHomeCoverViewModel() -> HomeCoverViewModel { HomeCoverViewModel() }
-    func makeProfileSheetViewModel() -> ProfileSheetViewModel { ProfileSheetViewModel() }
-    func makeProfileCoverViewModel() -> ProfileCoverViewModel { ProfileCoverViewModel() }
 }
