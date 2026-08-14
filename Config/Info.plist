@@ -4,17 +4,14 @@
 <dict>
 	<key>API_BASE_URL</key>
 	<string>$(API_BASE_URL)</string>
-	<key>API_TIMEOUT_SECONDS</key>
-	<string>$(API_TIMEOUT_SECONDS)</string>
-	<key>API_MAX_RETRIES</key>
-	<string>$(API_MAX_RETRIES)</string>
 	<key>API_LOGGING_ENABLED</key>
 	<string>$(API_LOGGING_ENABLED)</string>
-	<key>FORCE_UPDATE_ENABLED</key>
-	<string>$(FORCE_UPDATE_ENABLED)</string>
+	<key>API_MAX_RETRIES</key>
+	<string>$(API_MAX_RETRIES)</string>
+	<key>API_TIMEOUT_SECONDS</key>
+	<string>$(API_TIMEOUT_SECONDS)</string>
 	<key>APP_URL_SCHEME</key>
 	<string>$(APP_URL_SCHEME)</string>
-
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -31,9 +28,6 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
-
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -47,29 +41,29 @@
 			</array>
 		</dict>
 	</array>
-
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allows you to choose a photo from your library to use as your profile picture.</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FORCE_UPDATE_ENABLED</key>
+	<string>$(FORCE_UPDATE_ENABLED)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Allows you to take a new photo to use as your profile picture.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allows you to unlock the app with Face ID instead of signing in again.</string>
-
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
-
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allows you to choose a photo from your library to use as your profile picture.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<true/>
 	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

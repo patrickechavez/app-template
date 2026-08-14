@@ -48,6 +48,27 @@ Three configs, one shared base. All install side by side on one device.
 
 Values live in `Config/*.xcconfig` and reach code through `APIConfig`. Never hardcode a URL.
 
+## Firebase
+
+Crashlytics, Analytics, and Messaging via SPM. `GoogleService-Info.plist` is gitignored — supply your own.
+
+1. Create three Firebase projects, one per environment.
+2. Register an iOS app in each using that environment's bundle ID.
+3. Download each `GoogleService-Info.plist` into its matching folder, creating the folders as you go.
+
+```
+AppTemplate/Firebase/
+├── Development/GoogleService-Info.plist
+├── Staging/GoogleService-Info.plist
+└── Production/GoogleService-Info.plist
+```
+
+The folders are absent from git because they hold nothing but ignored files.
+
+Leave **Target Membership unchecked** on every plist. The `Copy GoogleService-Info.plist` build phase picks the right one from `$CONFIGURATION` and fails the build if its `BUNDLE_ID` doesn't match. Checking membership makes Xcode copy it too, and the build stops with `Multiple commands produce`.
+
+For push, add the Push Notifications capability and upload an APNs `.p8` key to each Firebase project.
+
 ## Structure
 
 ```
@@ -61,6 +82,7 @@ AppTemplate/
 │   ├── Session/      tokens, refresh, session state
 │   └── UI/           LoadState, AsyncContentView
 ├── Data/             repositories
+├── Firebase/         one GoogleService-Info.plist per environment
 ├── DesignSystem/     theme, accessibility identifiers
 ├── Features/         one folder per screen
 ├── Models/           models, pagination
@@ -70,6 +92,7 @@ AppTemplate/
 ## Before you ship
 
 - Real API URLs in all three xcconfigs
+- All three `GoogleService-Info.plist` files in place
 - Review `PrivacyInfo.xcprivacy` against what your backend stores
 - Replace the `Item` sample with your first real resource
 - App icon and accent color

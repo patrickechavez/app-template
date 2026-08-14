@@ -18,3 +18,6 @@ Package.resolved
 # Secrets / local config (keep real keys out of git)
 Secrets.xcconfig
 *.local.xcconfig
+
+# Firebase — each clone supplies its own project config
+GoogleService-Info.plist

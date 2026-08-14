@@ -5,25 +5,24 @@
 //  Pre-production builds for QA and internal distribution (TestFlight).
 //  Release-optimized, but still pointed at the staging backend.
 //
-
-#include "Shared.xcconfig"
-
-// MARK: - Identity
-APP_BUNDLE_ID = $(APP_BUNDLE_PREFIX).$(APP_NAME).staging
-APP_DISPLAY_NAME = AppTemplate QA
-APP_URL_SCHEME = apptemplate-staging
-
-// MARK: - API
+//  NOTE: `//` starts a comment in xcconfig files, so URLs must escape the
+//  double slash as `https:/$()/host`. The `$()` expands to nothing.
 //
-// REPLACE THIS with your staging API.
+
+APP_BUNDLE_ID = com.patrick.AppTemplate.staging
+APP_DISPLAY_NAME = App Template Staging
+APP_URL_SCHEME = apptemplate
+
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
 API_BASE_URL = https:/$()/dummyjson.com
 
-// Off by default: QA builds go to real testers, and request logs contain
-// bearer tokens. Flip to YES temporarily when chasing a bug.
 API_LOGGING_ENABLED = NO
 
 API_TIMEOUT_SECONDS = 30
 API_MAX_RETRIES = 2
 
-// MARK: - Build
+FORCE_UPDATE_ENABLED = YES
+
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) STAGING

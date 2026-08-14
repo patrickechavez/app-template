@@ -6,16 +6,36 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2DFCD23C302F3424006F0921 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFCD23B302F3424006F0921 /* FirebaseAnalytics */; };
+		2DFCD23E302F3424006F0921 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFCD23D302F3424006F0921 /* FirebaseCrashlytics */; };
+		2DFCD240302F3424006F0921 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFCD23F302F3424006F0921 /* FirebaseMessaging */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		2D1CA87C301A21BA00C6EFD2 /* AppTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DFCD3A6302F6CCD006F0921 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0FFEE0000000000000000C1 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
 		C0FFEE0000000000000000C2 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		C0FFEE0000000000000000C3 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2DFCD243302F3B0C006F0921 /* Exceptions for "AppTemplate" folder in "AppTemplate" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Firebase/Development/GoogleService-Info.plist",
+			);
+			target = 2D1CA87B301A21BA00C6EFD2 /* AppTemplate */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2D1CA87E301A21BA00C6EFD2 /* AppTemplate */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2DFCD243302F3B0C006F0921 /* Exceptions for "AppTemplate" folder in "AppTemplate" target */,
+			);
 			path = AppTemplate;
 			sourceTree = "<group>";
 		};
@@ -26,6 +46,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DFCD240302F3424006F0921 /* FirebaseMessaging in Frameworks */,
+				2DFCD23C302F3424006F0921 /* FirebaseAnalytics in Frameworks */,
+				2DFCD23E302F3424006F0921 /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +75,7 @@
 		C0FFEE0000000000000000C0 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				2DFCD3A6302F6CCD006F0921 /* Info.plist */,
 				C0FFEE0000000000000000C1 /* Development.xcconfig */,
 				C0FFEE0000000000000000C2 /* Staging.xcconfig */,
 				C0FFEE0000000000000000C3 /* Production.xcconfig */,
@@ -69,6 +93,7 @@
 				2D1CA878301A21BA00C6EFD2 /* Sources */,
 				2D1CA879301A21BA00C6EFD2 /* Frameworks */,
 				2D1CA87A301A21BA00C6EFD2 /* Resources */,
+				2DFCD242302F3A41006F0921 /* Copy GoogleService-Info.plist */,
 			);
 			buildRules = (
 			);
@@ -79,6 +104,9 @@
 			);
 			name = AppTemplate;
 			packageProductDependencies = (
+				2DFCD23B302F3424006F0921 /* FirebaseAnalytics */,
+				2DFCD23D302F3424006F0921 /* FirebaseCrashlytics */,
+				2DFCD23F302F3424006F0921 /* FirebaseMessaging */,
 			);
 			productName = AppTemplate;
 			productReference = 2D1CA87C301A21BA00C6EFD2 /* AppTemplate.app */;
@@ -108,6 +136,9 @@
 			);
 			mainGroup = 2D1CA873301A21BA00C6EFD2;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2DFCD23A302F3424006F0921 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2D1CA87D301A21BA00C6EFD2 /* Products */;
 			projectDirPath = "";
@@ -127,6 +158,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2DFCD242302F3A41006F0921 /* Copy GoogleService-Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/AppTemplate/Firebase/$(CONFIGURATION)/GoogleService-Info.plist",
+			);
+			name = "Copy GoogleService-Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\ncase \"${CONFIGURATION}\" in\n  Development) ENV=\"Development\" ;;\n  Staging)     ENV=\"Staging\" ;;\n  Production)  ENV=\"Production\" ;;\n  *)\n    echo \"error: Unknown configuration ${CONFIGURATION}\"\n    exit 1\n    ;;\nesac\n\nSRC=\"${SRCROOT}/AppTemplate/Firebase/${ENV}/GoogleService-Info.plist\"\nDST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\"\n\nif [ ! -f \"${SRC}\" ]; then\n  echo \"error: Missing Firebase plist at ${SRC}\"\n  exit 1\nfi\n\nPLIST_BUNDLE_ID=$(/usr/libexec/PlistBuddy -c \"Print :BUNDLE_ID\" \"${SRC}\")\nif [ \"${PLIST_BUNDLE_ID}\" != \"${PRODUCT_BUNDLE_IDENTIFIER}\" ]; then\n  echo \"error: Plist BUNDLE_ID (${PLIST_BUNDLE_ID}) != build bundle ID (${PRODUCT_BUNDLE_IDENTIFIER})\"\n  exit 1\nfi\n\nmkdir -p \"$(dirname \"${DST}\")\"\ncp -v \"${SRC}\" \"${DST}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2D1CA878301A21BA00C6EFD2 /* Sources */ = {
@@ -437,6 +491,35 @@
 			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2DFCD23A302F3424006F0921 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.17.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2DFCD23B302F3424006F0921 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DFCD23A302F3424006F0921 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		2DFCD23D302F3424006F0921 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DFCD23A302F3424006F0921 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		2DFCD23F302F3424006F0921 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DFCD23A302F3424006F0921 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2D1CA874301A21BA00C6EFD2 /* Project object */;
 }

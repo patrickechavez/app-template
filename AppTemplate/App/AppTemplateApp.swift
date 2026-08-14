@@ -5,10 +5,31 @@
 //
 
 import SwiftUI
+import UIKit
 import os
+import FirebaseCore
+import FirebaseMessaging
+
+final class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate {
+
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        return true
+    }
+
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        AppLogger.lifecycle.debug("FCM token \(fcmToken ?? "nil")")
+    }
+}
 
 @main
 struct AppTemplateApp: App {
+
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     @State private var dependencies = AppDependencies.live()
     @State private var navigator: AppNavigator

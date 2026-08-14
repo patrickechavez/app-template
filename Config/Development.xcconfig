@@ -5,27 +5,24 @@
 //  Local / day-to-day development builds. Installs alongside Staging and
 //  Production because the bundle ID and display name are suffixed.
 //
-
-#include "Shared.xcconfig"
-
-// MARK: - Identity
-// The `.dev` suffix lets all three environments coexist on one device.
-APP_BUNDLE_ID = $(APP_BUNDLE_PREFIX).$(APP_NAME).dev
-APP_DISPLAY_NAME = AppTemplate Dev
-APP_URL_SCHEME = apptemplate-dev
-
-// MARK: - API
+//  NOTE: `//` starts a comment in xcconfig files, so URLs must escape the
+//  double slash as `https:/$()/host`. The `$()` expands to nothing.
 //
-// REPLACE THIS with your development API. The template ships pointing at a
-// public sample API so a fresh clone runs without a backend.
+
+APP_BUNDLE_ID = com.patrick.AppTemplate.dev
+APP_DISPLAY_NAME = App Template Dev
+APP_URL_SCHEME = apptemplate
+
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 1
+
 API_BASE_URL = https:/$()/dummyjson.com
 
-// Verbose request/response logging is safe here and saves a lot of time.
 API_LOGGING_ENABLED = YES
 
-// Fail fast locally instead of masking a slow endpoint with retries.
 API_TIMEOUT_SECONDS = 20
 API_MAX_RETRIES = 0
 
-// MARK: - Build
+FORCE_UPDATE_ENABLED = YES
+
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DEVELOPMENT
