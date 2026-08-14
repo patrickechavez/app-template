@@ -33,12 +33,19 @@ final class SessionManager {
     @ObservationIgnored private let tokenStore: any TokenStore
     @ObservationIgnored private let users: any UserRepository
     @ObservationIgnored private let events: SessionEventBus
+    @ObservationIgnored private let crashes: any CrashReporting
     @ObservationIgnored private var eventTask: Task<Void, Never>?
 
-    init(tokenStore: any TokenStore, users: any UserRepository, events: SessionEventBus) {
+    init(
+        tokenStore: any TokenStore,
+        users: any UserRepository,
+        events: SessionEventBus,
+        crashes: any CrashReporting = NoopCrashReporter()
+    ) {
         self.tokenStore = tokenStore
         self.users = users
         self.events = events
+        self.crashes = crashes
         observeEvents()
     }
 
@@ -53,7 +60,7 @@ final class SessionManager {
         }
 
         do {
-            currentUser = try await users.currentUser()
+            setCurrentUser(try await users.currentUser())
             state = .authenticated
             AppLogger.lifecycle.notice("Resumed existing session")
         } catch let error as APIError where error.invalidatesSession {
@@ -76,7 +83,7 @@ final class SessionManager {
             AppLogger.auth.error("Could not persist tokens: \(error.localizedDescription, privacy: .public)")
         }
 
-        currentUser = user
+        setCurrentUser(user)
         state = .authenticated
 
         if user == nil {
@@ -87,18 +94,25 @@ final class SessionManager {
 
     func signOut() async {
         await tokenStore.clear()
-        currentUser = nil
+        setCurrentUser(nil)
         state = .unauthenticated
         AppLogger.lifecycle.notice("Signed out")
     }
 
     func refreshCurrentUser() async {
         guard state == .authenticated else { return }
-        currentUser = try? await users.currentUser()
+        setCurrentUser(try? await users.currentUser())
     }
 
     func update(user: User) {
+        setCurrentUser(user)
+    }
+
+    /// Keeps the crash reporter's user ID in step with the session, so a report
+    /// says who it happened to rather than just what happened.
+    private func setCurrentUser(_ user: User?) {
         currentUser = user
+        crashes.setUser(id: user.map { String($0.id) })
     }
 
     func dismissServiceStatus() {

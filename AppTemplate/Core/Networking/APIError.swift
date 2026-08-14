@@ -162,6 +162,45 @@ enum APIError: LocalizedError, Equatable, Sendable {
         return true
     }
 
+    /// A stable, low-cardinality label for analytics. Deliberately drops the
+    /// associated values — server messages and validation details can carry
+    /// user data, which has no business in an analytics payload.
+    var analyticsReason: String {
+        switch self {
+        case .offline: "offline"
+        case .timedOut: "timed_out"
+        case .cancelled: "cancelled"
+        case .transport: "transport"
+        case .invalidURL: "invalid_url"
+        case .invalidResponse: "invalid_response"
+        case .decodingFailed: "decoding_failed"
+        case .unauthorized: "unauthorized"
+        case .forbidden: "forbidden"
+        case .notFound: "not_found"
+        case .conflict: "conflict"
+        case .validation: "validation"
+        case .rateLimited: "rate_limited"
+        case .updateRequired: "update_required"
+        case .maintenance: "maintenance"
+        case let .server(status, _): "server_\(status)"
+        }
+    }
+
+    /// Errors that mean the app or the backend is broken, as opposed to a
+    /// network condition or a rejection the user can act on. Only these are
+    /// worth a non-fatal crash report — the rest would drown it in noise.
+    var isWorthReporting: Bool {
+        switch self {
+        case .invalidURL, .invalidResponse, .decodingFailed:
+            true
+        case let .server(status, _):
+            status >= 500
+        case .offline, .timedOut, .cancelled, .transport, .unauthorized, .forbidden,
+             .notFound, .conflict, .validation, .rateLimited, .updateRequired, .maintenance:
+            false
+        }
+    }
+
     static func from(transportError error: any Error) -> APIError {
         if error is CancellationError { return .cancelled }
 

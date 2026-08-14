@@ -4,7 +4,7 @@
 //  Created by John Patrick Echavez on 7/29/26.
 //
 
-#if DEBUG
+#if DEVELOPMENT
 
 import Foundation
 import UIKit

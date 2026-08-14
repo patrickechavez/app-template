@@ -72,7 +72,9 @@ extension AppDependencies {
             imageLoader: MockImageLoader(),
             tokenStore: tokenStore,
             events: events,
-            deepLinks: DeepLinkParser()
+            deepLinks: DeepLinkParser(),
+            analytics: NoopAnalyticsTracker(),
+            crashes: NoopCrashReporter()
         )
     }
 }

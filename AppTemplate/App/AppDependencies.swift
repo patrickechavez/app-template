@@ -11,6 +11,8 @@ final class AppDependencies {
 
     let session: SessionManager
     let deepLinks: DeepLinkParser
+    let analytics: any AnalyticsTracking
+    let crashes: any CrashReporting
 
     private let auth: any AuthRepository
     private let users: any UserRepository
@@ -27,7 +29,9 @@ final class AppDependencies {
         imageLoader: any ImageLoading,
         tokenStore: any TokenStore,
         events: SessionEventBus,
-        deepLinks: DeepLinkParser
+        deepLinks: DeepLinkParser,
+        analytics: any AnalyticsTracking,
+        crashes: any CrashReporting
     ) {
         self.session = session
         self.auth = auth
@@ -37,9 +41,15 @@ final class AppDependencies {
         self.tokenStore = tokenStore
         self.events = events
         self.deepLinks = deepLinks
+        self.analytics = analytics
+        self.crashes = crashes
     }
 
     static func live() -> AppDependencies {
+        let analytics = FirebaseAnalyticsTracker()
+        let crashes = FirebaseCrashReporter()
+        Observability.install(analytics: analytics, crashes: crashes)
+
         let events = SessionEventBus()
         let session = Self.urlSession()
 
@@ -74,14 +84,21 @@ final class AppDependencies {
         let users = LiveUserRepository(api: api)
 
         return AppDependencies(
-            session: SessionManager(tokenStore: tokenStore, users: users, events: events),
+            session: SessionManager(
+                tokenStore: tokenStore,
+                users: users,
+                events: events,
+                crashes: crashes
+            ),
             auth: LiveAuthRepository(api: api),
             users: users,
             items: LiveItemRepository(api: api),
             imageLoader: ImageLoader.shared,
             tokenStore: tokenStore,
             events: events,
-            deepLinks: DeepLinkParser()
+            deepLinks: DeepLinkParser(),
+            analytics: analytics,
+            crashes: crashes
         )
     }
 
@@ -101,7 +118,7 @@ final class AppDependencies {
     }
 
     func makeLoginViewModel() -> LoginViewModel {
-        LoginViewModel(auth: auth, session: session)
+        LoginViewModel(auth: auth, session: session, analytics: analytics)
     }
 
     func makeRegisterViewModel() -> RegisterViewModel {

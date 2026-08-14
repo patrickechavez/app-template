@@ -31,6 +31,8 @@ extension LoadableViewModel {
         } catch {
             let apiError = error as? APIError ?? APIError.from(transportError: error)
 
+            if apiError.isWorthReporting { Observability.crashes.record(apiError) }
+
             guard apiError.isUserFacing else { return }
 
             if isRefresh, state.value != nil { return }
@@ -82,6 +84,9 @@ final class ActionState {
             return try await operation()
         } catch {
             let apiError = error as? APIError ?? APIError.from(transportError: error)
+
+            if apiError.isWorthReporting { Observability.crashes.record(apiError) }
+
             guard apiError.isUserFacing else { return nil }
             self.error = apiError
             return nil
