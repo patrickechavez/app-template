@@ -48,6 +48,12 @@ Three configs, one shared base. All install side by side on one device.
 
 Values live in `Config/*.xcconfig` and reach code through `APIConfig`. Never hardcode a URL.
 
+## Secrets
+
+Client SDK keys you'd rather not publish go in `Config/Secrets.xcconfig`, which is gitignored. Copy `Secrets.example.xcconfig`, drop the `.example`, fill it in — all three environments already `#include?` it, and the `?` means a clone without the file still builds.
+
+Everything there is substituted into Info.plist and ships inside the IPA. It keeps values out of git, not off a device. Server-side keys belong on your server.
+
 ## Firebase
 
 Crashlytics, Analytics, and Messaging via SPM. `GoogleService-Info.plist` is gitignored — supply your own.
