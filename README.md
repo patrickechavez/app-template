@@ -8,35 +8,39 @@ A production-ready SwiftUI app template. MVVM + Repository, Swift 6 strict concu
 
 Clone, rename, and you have a running app in under ten minutes.
 
-```bash
-git clone <this-repo> <AppName> && cd <AppName>
-Scripts/rename.sh <AppName> <BundlePrefix> [DisplayName]
-```
+### 1. Clone and rename
 
-| | | |
-|---|---|---|
-| `<AppName>` | required | Becomes the target, the source folder, and a Swift type. Letters and digits, starting with a letter — no spaces or hyphens. e.g. `MyApp` |
-| `<BundlePrefix>` | required | Lowercase reverse-DNS with at least two components. e.g. `com.acmecorp` |
-| `[DisplayName]` | optional | The home screen name. Defaults to `<AppName>`, so you only pass it when the two differ. e.g. `"My App"` |
+Three commands. Substitute your own values.
 
 ```bash
-Scripts/rename.sh MyApp com.acmecorp
+git clone <this-repo> MyApp
+cd MyApp
 Scripts/rename.sh MyApp com.acmecorp "My App"
 ```
 
-The script renames the project, target, schemes, source folder, app entry point, and every file header, and rewrites the bundle IDs, display names, and deep link scheme. It requires a clean working tree, so `git checkout . && git clean -fd` undoes any run.
+The three arguments to the script:
 
-Start your own history when you're happy:
+| | | |
+|---|---|---|
+| `MyApp` | required | The app name. Becomes the target, the source folder, and a Swift type, so it takes letters and digits only, starting with a letter — no spaces or hyphens. |
+| `com.acmecorp` | required | Your bundle prefix. Lowercase reverse-DNS, at least two components. |
+| `"My App"` | optional | The home screen name, quoted because it can contain spaces. Leave it off when it matches the app name — `Scripts/rename.sh Runly com.acmecorp` gives an app called Runly. |
+
+This renames the project, target, schemes, source folder, app entry point, and every file header, and rewrites the bundle IDs, display names, and deep link scheme. It needs a clean working tree, so `git checkout . && git clean -fd` undoes any run.
+
+### 2. Start your own history
 
 ```bash
 rm -rf .git && git init && git add -A && git commit -m "Initial commit"
 ```
 
-Then three things the script can't do for you.
+### 3. Finish the setup
 
-1. **Your API** — set `API_BASE_URL` in each of the three `Config/*.xcconfig`.
-2. **Firebase** — create a project and download its `GoogleService-Info.plist` (see below).
-3. **App icon** — `Assets.xcassets/AppIcon.appiconset` ships empty.
+Three things the script can't do for you.
+
+- **Your API** — set `API_BASE_URL` in each of the three `Config/*.xcconfig`
+- **Firebase** — create a project and download its `GoogleService-Info.plist` (see below)
+- **App icon** — `Assets.xcassets/AppIcon.appiconset` ships empty
 
 ```bash
 xcodebuild -scheme Development -destination 'platform=iOS Simulator,name=iPhone 16' build
