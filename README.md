@@ -6,13 +6,48 @@ A production-ready SwiftUI app template. MVVM + Repository, Swift 6 strict concu
 
 ## Getting started
 
-1. Point the app at your API in `Config/Development.xcconfig` (and Staging / Production).
-2. Rename the project — set `APP_NAME` and `APP_BUNDLE_PREFIX` in `Config/Shared.xcconfig`.
-3. Build and run.
+Clone, rename, and you have a running app in under ten minutes.
+
+```bash
+git clone <this-repo> Gastos && cd Gastos
+Scripts/rename.sh Gastos com.patrick
+```
+
+The script takes an app name, a bundle prefix, and an optional display name when it differs from the app name.
+
+```bash
+Scripts/rename.sh MyApp com.acmecorp "My App"
+```
+
+It requires a clean working tree, so `git checkout . && git clean -fd` undoes everything. Start your own history when you're happy:
+
+```bash
+rm -rf .git docs/superpowers && git init && git add -A && git commit -m "Initial commit"
+```
+
+Then three things the script can't do for you.
+
+1. **Your API** — set `API_BASE_URL` in each of the three `Config/*.xcconfig`.
+2. **Firebase** — create a project and download its `GoogleService-Info.plist` (see below).
+3. **App icon** — `Assets.xcassets/AppIcon.appiconset` ships empty.
 
 ```bash
 xcodebuild -scheme Development -destination 'platform=iOS Simulator,name=iPhone 16' build
 ```
+
+## Removing the sample
+
+`Item` is a worked example, not something to build on. Keep it while you write your first real feature — it's the only place pagination, `LoadState`, and the repository pattern are shown working end to end — then delete it.
+
+```
+Features/Dashboard/HomeView/          the list screen
+Features/Dashboard/ItemDetailView/    the detail screen
+Data/ItemRepository.swift
+Models/Models.swift                   the Item and ItemDraft types
+Core/Testing/Mocks.swift              SampleData.items and MockItemRepository
+```
+
+Then remove `makeHomeViewModel`, `makeItemDetailViewModel` (both overloads), and the `items` property from `AppDependencies`, and drop `.itemDetail` from `HomeRoute`. The compiler finds anything you miss.
 
 ## What's inside
 
@@ -60,7 +95,7 @@ Crashlytics, Analytics, and Messaging via SPM. `GoogleService-Info.plist` is git
 
 1. Create three Firebase projects, one per environment.
 2. Register an iOS app in each using that environment's bundle ID.
-3. Download each `GoogleService-Info.plist` into its matching folder, creating the folders as you go.
+3. Download each `GoogleService-Info.plist` into its matching folder, creating the folders as you go. Development is enough to start — the Staging and Production schemes fail with `Missing Firebase plist` until you add theirs, which is the guard working rather than a broken checkout.
 
 ```
 AppTemplate/Firebase/
@@ -99,6 +134,6 @@ AppTemplate/
 
 - Real API URLs in all three xcconfigs
 - All three `GoogleService-Info.plist` files in place
+- The `Item` sample removed
 - Review `PrivacyInfo.xcprivacy` against what your backend stores
-- Replace the `Item` sample with your first real resource
 - App icon and accent color

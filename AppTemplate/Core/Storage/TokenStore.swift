@@ -38,7 +38,13 @@ actor KeychainTokenStore: TokenStore {
     private var cached: AuthTokens??
 
     init(service: String? = nil) {
-        self.service = service ?? Bundle.main.bundleIdentifier ?? "com.patrick.AppTemplate"
+        guard let service = service ?? Bundle.main.bundleIdentifier else {
+
+            // A launched app always has a bundle identifier. Falling back to a
+            // literal here would let two apps quietly share one keychain entry.
+            preconditionFailure("Bundle.main.bundleIdentifier is missing")
+        }
+        self.service = service
     }
 
     func load() async -> AuthTokens? {
