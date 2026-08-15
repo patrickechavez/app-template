@@ -25,6 +25,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Firebase/Development/GoogleService-Info.plist",
+				"Firebase/Staging/GoogleService-Info.plist",
 			);
 			target = 2D1CA87B301A21BA00C6EFD2 /* AppTemplate */;
 		};
@@ -94,6 +95,7 @@
 				2D1CA879301A21BA00C6EFD2 /* Frameworks */,
 				2D1CA87A301A21BA00C6EFD2 /* Resources */,
 				2DFCD242302F3A41006F0921 /* Copy GoogleService-Info.plist */,
+				2DFCD400302F9A00006F0921 /* Upload Crashlytics dSYM */,
 			);
 			buildRules = (
 			);
@@ -179,6 +181,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\ncase \"${CONFIGURATION}\" in\n  Development) ENV=\"Development\" ;;\n  Staging)     ENV=\"Staging\" ;;\n  Production)  ENV=\"Production\" ;;\n  *)\n    echo \"error: Unknown configuration ${CONFIGURATION}\"\n    exit 1\n    ;;\nesac\n\nSRC=\"${SRCROOT}/AppTemplate/Firebase/${ENV}/GoogleService-Info.plist\"\nDST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\"\n\nif [ ! -f \"${SRC}\" ]; then\n  echo \"error: Missing Firebase plist at ${SRC}\"\n  exit 1\nfi\n\nPLIST_BUNDLE_ID=$(/usr/libexec/PlistBuddy -c \"Print :BUNDLE_ID\" \"${SRC}\")\nif [ \"${PLIST_BUNDLE_ID}\" != \"${PRODUCT_BUNDLE_IDENTIFIER}\" ]; then\n  echo \"error: Plist BUNDLE_ID (${PLIST_BUNDLE_ID}) != build bundle ID (${PRODUCT_BUNDLE_IDENTIFIER})\"\n  exit 1\nfi\n\nmkdir -p \"$(dirname \"${DST}\")\"\ncp -v \"${SRC}\" \"${DST}\"\n";
+		};
+		2DFCD400302F9A00006F0921 /* Upload Crashlytics dSYM */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+			);
+			name = "Upload Crashlytics dSYM";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Uploads debug symbols so Crashlytics can turn addresses into file and\n# line numbers. Must run after \"Copy GoogleService-Info.plist\" — the\n# Firebase script reads that plist from the bundle to pick the project.\n#\n# Development builds use DWARF with symbols inside the binary, so there is\n# no dSYM to send and nothing to do.\n\nif [ \"${DEBUG_INFORMATION_FORMAT}\" != \"dwarf-with-dsym\" ]; then\n  echo \"note: ${CONFIGURATION} produces no dSYM — skipping Crashlytics upload\"\n  exit 0\nfi\n\nRUN=\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n\nif [ ! -f \"${RUN}\" ]; then\n  echo \"warning: Crashlytics run script not found at ${RUN} — skipping upload\"\n  exit 0\nfi\n\n\"${RUN}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
