@@ -156,6 +156,17 @@ AppTemplate/
 └── Resources/        String Catalog
 ```
 
+## Apple Developer account
+
+Not needed to build, run, or develop against this template. The simulator needs nothing, and a free Apple ID signs builds onto your own device.
+
+A paid membership is required for exactly two things.
+
+- **Push notifications** — the capability and the APNs `.p8` are both members-only
+- **Distribution** — TestFlight and the App Store
+
+Everything else works without one, which is why push stays scaffolded rather than half-implemented.
+
 ## Before you ship
 
 - Real API URLs in all three xcconfigs
