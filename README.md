@@ -64,10 +64,13 @@ Then remove `makeHomeViewModel`, `makeItemDetailViewModel` (both overloads), and
 
 - **Networking** — one send path with verb helpers, typed errors, server-message parsing, interceptors, retry with backoff
 - **Auth** — access + refresh tokens, single-flight refresh, 401 to refresh to retry to sign-out, Keychain storage
-- **Navigation** — typed routes, deep links, universal links, deferred links, force-update gate
+- **Navigation** — typed routes, deep links, universal links, deferred links
 - **UI** — design system, unified `LoadState`, empty / error / skeleton states, accessibility identifiers, localization via String Catalog
 - **Images** — bounded two-tier cache with LRU eviction and in-flight de-duplication
-- **Build** — three environments, privacy manifest
+- **Observability** — analytics and crash reporting behind protocols, with Firebase adapters; non-fatals recorded with no per-feature wiring
+- **Build** — three environments, privacy manifest, one-command rename
+
+Scaffolded but **not** wired — push notifications, and the force-update gate (`FORCE_UPDATE_ENABLED` and `VersionCheck` exist; nothing reads them).
 
 ## Architecture
 
@@ -119,7 +122,19 @@ The folders are absent from git because they hold nothing but ignored files.
 
 Leave **Target Membership unchecked** on every plist. The `Copy GoogleService-Info.plist` build phase picks the right one from `$CONFIGURATION` and fails the build if its `BUNDLE_ID` doesn't match. Checking membership makes Xcode copy it too, and the build stops with `Multiple commands produce`.
 
-For push, add the Push Notifications capability and upload an APNs `.p8` key to each Firebase project.
+Crashlytics symbols upload automatically. The `Upload Crashlytics dSYM` phase skips Development, which keeps its symbols in the binary, and sends Staging and Production to whichever Firebase project that configuration points at.
+
+### Push is scaffolded, not wired
+
+`FirebaseMessaging` is installed and configured, and `UserRepository` declares `registerForPushNotifications(token:)`. **Nothing calls it.** The app logs its FCM token and discards it, so no notification can reach a device. Finish it before relying on it.
+
+- Ask for permission and call `registerForRemoteNotifications()`
+- Set `Messaging.messaging().apnsToken` in `didRegisterForRemoteNotificationsWithDeviceToken`
+- Send the FCM token to your backend, and clear it on sign-out
+- Route taps through `AppNavigator`, which already handles deep links
+- Add the **Push Notifications** capability, and upload an APNs `.p8` to each Firebase project
+
+The last one needs a paid Apple Developer membership. FCM does not replace APNs on iOS — it forwards through it, and the `.p8` is what authorizes Firebase to do that on your behalf.
 
 ## Structure
 
