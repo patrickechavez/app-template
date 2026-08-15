@@ -15,12 +15,12 @@ Scripts/rename.sh <AppName> <BundlePrefix> [DisplayName]
 
 | | | |
 |---|---|---|
-| `<AppName>` | required | Becomes the target, the source folder, and a Swift type. Letters and digits, starting with a letter — no spaces or hyphens. e.g. `Gastos` |
+| `<AppName>` | required | Becomes the target, the source folder, and a Swift type. Letters and digits, starting with a letter — no spaces or hyphens. e.g. `MyApp` |
 | `<BundlePrefix>` | required | Lowercase reverse-DNS with at least two components. e.g. `com.acmecorp` |
-| `[DisplayName]` | optional | The home screen name. Defaults to `<AppName>`, so you only pass it when the two differ. e.g. `"Gas Tos"` |
+| `[DisplayName]` | optional | The home screen name. Defaults to `<AppName>`, so you only pass it when the two differ. e.g. `"My App"` |
 
 ```bash
-Scripts/rename.sh Gastos com.patrick
+Scripts/rename.sh MyApp com.acmecorp
 Scripts/rename.sh MyApp com.acmecorp "My App"
 ```
 

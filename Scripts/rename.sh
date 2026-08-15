@@ -6,7 +6,7 @@
 #  Renames the template to a new app. Run once, from the repository root, on a
 #  clean working tree:
 #
-#      Scripts/rename.sh Gastos com.patrick
+#      Scripts/rename.sh MyApp com.acmecorp
 #      Scripts/rename.sh MyApp com.acmecorp "My App"
 #
 #  Every change lands in the working tree, so `git checkout . && git clean -fd`
@@ -33,7 +33,7 @@ usage: Scripts/rename.sh <AppName> <BundlePrefix> [DisplayName]
   DisplayName   home screen name. Defaults to AppName.
 
 examples:
-  Scripts/rename.sh Gastos com.patrick
+  Scripts/rename.sh MyApp com.acmecorp
   Scripts/rename.sh MyApp com.acmecorp "My App"
 EOF
     exit 1
