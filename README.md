@@ -9,20 +9,27 @@ A production-ready SwiftUI app template. MVVM + Repository, Swift 6 strict concu
 Clone, rename, and you have a running app in under ten minutes.
 
 ```bash
-git clone <this-repo> Gastos && cd Gastos
-Scripts/rename.sh Gastos com.patrick
+git clone <this-repo> <AppName> && cd <AppName>
+Scripts/rename.sh <AppName> <BundlePrefix> [DisplayName]
 ```
 
-The script takes an app name, a bundle prefix, and an optional display name when it differs from the app name.
+| | | |
+|---|---|---|
+| `<AppName>` | required | Becomes the target, the source folder, and a Swift type. Letters and digits, starting with a letter — no spaces or hyphens. |
+| `<BundlePrefix>` | required | Lowercase reverse-DNS with at least two components, e.g. `com.acmecorp`. |
+| `[DisplayName]` | optional | The home screen name. Defaults to `<AppName>`, so you only pass it when the two differ. |
 
 ```bash
+Scripts/rename.sh Gastos com.patrick
 Scripts/rename.sh MyApp com.acmecorp "My App"
 ```
 
-It requires a clean working tree, so `git checkout . && git clean -fd` undoes everything. Start your own history when you're happy:
+The script renames the project, target, schemes, source folder, app entry point, and every file header, and rewrites the bundle IDs, display names, and deep link scheme. It requires a clean working tree, so `git checkout . && git clean -fd` undoes any run.
+
+Start your own history when you're happy:
 
 ```bash
-rm -rf .git docs/superpowers && git init && git add -A && git commit -m "Initial commit"
+rm -rf .git && git init && git add -A && git commit -m "Initial commit"
 ```
 
 Then three things the script can't do for you.
