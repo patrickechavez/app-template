@@ -27,6 +27,7 @@ struct RootView: View {
             }
         }
         .animation(Theme.Animation.standard, value: dependencies.session.state)
+        .offlineBanner(dependencies.network)
         .task {
             await dependencies.session.bootstrap()
         }

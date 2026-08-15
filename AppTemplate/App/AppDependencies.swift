@@ -13,6 +13,7 @@ final class AppDependencies {
     let deepLinks: DeepLinkParser
     let analytics: any AnalyticsTracking
     let crashes: any CrashReporting
+    let network: NetworkMonitor
 
     private let auth: any AuthRepository
     private let users: any UserRepository
@@ -31,7 +32,8 @@ final class AppDependencies {
         events: SessionEventBus,
         deepLinks: DeepLinkParser,
         analytics: any AnalyticsTracking,
-        crashes: any CrashReporting
+        crashes: any CrashReporting,
+        network: NetworkMonitor = NetworkMonitor()
     ) {
         self.session = session
         self.auth = auth
@@ -43,6 +45,7 @@ final class AppDependencies {
         self.deepLinks = deepLinks
         self.analytics = analytics
         self.crashes = crashes
+        self.network = network
     }
 
     static func live() -> AppDependencies {

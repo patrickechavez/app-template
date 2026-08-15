@@ -67,6 +67,7 @@ Then remove `makeHomeViewModel`, `makeItemDetailViewModel` (both overloads), and
 - **Navigation** — typed routes, deep links, universal links, deferred links
 - **UI** — design system, unified `LoadState`, empty / error / skeleton states, accessibility identifiers, localization via String Catalog
 - **Images** — bounded two-tier cache with LRU eviction and in-flight de-duplication
+- **Connectivity** — `NWPathMonitor` behind an offline banner, so a failing screen reads as a connection problem
 - **Observability** — analytics and crash reporting behind protocols, with Firebase adapters; non-fatals recorded with no per-feature wiring
 - **Build** — three environments, privacy manifest, one-command rename
 

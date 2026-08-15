@@ -52,6 +52,7 @@ enum AccessibilityID {
         static let tabBar = "shell.tabBar"
         static let launchProgress = "shell.launchProgress"
         static let updateRequired = "shell.updateRequired"
+        static let offlineBanner = "shell.offlineBanner"
     }
 }
 
