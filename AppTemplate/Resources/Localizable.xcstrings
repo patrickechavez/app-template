@@ -352,6 +352,9 @@
     "No access" : {
 
     },
+    "No internet connection" : {
+      "comment" : "Banner shown while the device is offline"
+    },
     "No items yet" : {
 
     },
