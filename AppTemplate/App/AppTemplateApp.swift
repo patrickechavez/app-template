@@ -42,12 +42,18 @@ struct AppTemplateApp: App {
         _navigator = State(
             wrappedValue: AppNavigator(parser: dependencies.deepLinks)
         )
+        reportDeviceSecurity(dependencies: dependencies)
     }
 
     var body: some Scene {
         WindowGroup {
             RootView(dependencies: dependencies)
                 .environment(navigator)
+                .overlay {
+                    if scenePhase != .active {
+                        PrivacyShieldView()
+                    }
+                }
 
                 .onOpenURL { url in
                     navigator.open(url, isAuthenticated: dependencies.session.state == .authenticated)
@@ -66,6 +72,9 @@ struct AppTemplateApp: App {
                 .onChange(of: scenePhase) { _, phase in
                     handle(phase)
                 }
+                .onReceive(ScreenshotDetector.publisher) { _ in
+                    dependencies.analytics.track("screenshot_captured")
+                }
         }
     }
 
@@ -81,6 +90,20 @@ struct AppTemplateApp: App {
             break
         @unknown default:
             break
+        }
+    }
+
+    /// Report-only hardening checks: flag the device in analytics and logs if
+    /// jailbreak indicators or a debugger are detected, without blocking.
+    private func reportDeviceSecurity(dependencies: AppDependencies) {
+        if DefaultJailbreakDetector().isJailbroken {
+            dependencies.analytics.track("device_jailbroken")
+            AppLogger.lifecycle.warning("Jailbreak indicators detected on device")
+        }
+
+        if DefaultDebuggerDetector().isDebuggerAttached {
+            dependencies.analytics.track("debugger_attached")
+            AppLogger.lifecycle.warning("Debugger is attached to the process")
         }
     }
 }
