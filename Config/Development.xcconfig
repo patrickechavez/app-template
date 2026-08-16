@@ -20,6 +20,8 @@ CURRENT_PROJECT_VERSION = 1
 
 API_BASE_URL = https:/$()/dummyjson.com
 
+UPDATE_URL = itms-apps:/$()/apple.com/app/id000000000
+
 API_LOGGING_ENABLED = YES
 
 API_TIMEOUT_SECONDS = 20

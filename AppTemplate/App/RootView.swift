@@ -98,11 +98,9 @@ struct ServiceStatusView: View {
             Spacer()
 
             VStack(spacing: Theme.Spacing.md) {
-                if isUpdateRequired {
+                if isUpdateRequired, let updateURL = APIConfig.updateURL {
                     Button {
-                        if let url = URL(string: "itms-apps://apple.com/app/id000000000") {
-                            openURL(url)
-                        }
+                        openURL(updateURL)
                     } label: {
                         Text("Update Now", comment: "Button that opens the App Store listing")
                             .frame(maxWidth: .infinity)

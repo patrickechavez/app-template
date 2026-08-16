@@ -42,6 +42,8 @@ enum APIConfig {
             .filter { !$0.isEmpty }
     }()
 
+    static let updateURL: URL? = string("UPDATE_URL").flatMap(URL.init(string:))
+
     static var retryPolicy: RetryPolicy {
         maxAttempts <= 1 ? .none : RetryPolicy(maxAttempts: maxAttempts)
     }

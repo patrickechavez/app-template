@@ -49,6 +49,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FORCE_UPDATE_ENABLED</key>
 	<string>$(FORCE_UPDATE_ENABLED)</string>
+	<key>UPDATE_URL</key>
+	<string>$(UPDATE_URL)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
