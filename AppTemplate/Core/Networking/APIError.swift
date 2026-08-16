@@ -32,6 +32,8 @@ enum APIError: LocalizedError, Equatable, Sendable {
 
     case transport(detail: String)
 
+    case serverTrustFailed
+
     case invalidURL
 
     case invalidResponse
@@ -73,6 +75,10 @@ enum APIError: LocalizedError, Equatable, Sendable {
         case .transport:
             String(localized: "We couldn't reach the server. Please try again.",
                    comment: "Generic network transport failure")
+
+        case .serverTrustFailed:
+            String(localized: "We couldn't establish a secure connection. Please try again.",
+                   comment: "Error shown when the server's certificate fails trust validation")
 
         case .invalidURL, .invalidResponse, .decodingFailed:
 
@@ -141,7 +147,7 @@ enum APIError: LocalizedError, Equatable, Sendable {
         case let .server(status, _):
 
             status >= 500
-        case .cancelled, .invalidURL, .invalidResponse, .decodingFailed,
+        case .cancelled, .invalidURL, .invalidResponse, .decodingFailed, .serverTrustFailed,
              .unauthorized, .forbidden, .notFound, .conflict, .validation, .updateRequired:
             false
         }
@@ -171,6 +177,7 @@ enum APIError: LocalizedError, Equatable, Sendable {
         case .timedOut: "timed_out"
         case .cancelled: "cancelled"
         case .transport: "transport"
+        case .serverTrustFailed: "server_trust_failed"
         case .invalidURL: "invalid_url"
         case .invalidResponse: "invalid_response"
         case .decodingFailed: "decoding_failed"
@@ -191,7 +198,7 @@ enum APIError: LocalizedError, Equatable, Sendable {
     /// worth a non-fatal crash report — the rest would drown it in noise.
     var isWorthReporting: Bool {
         switch self {
-        case .invalidURL, .invalidResponse, .decodingFailed:
+        case .invalidURL, .invalidResponse, .decodingFailed, .serverTrustFailed:
             true
         case let .server(status, _):
             status >= 500
@@ -218,6 +225,9 @@ enum APIError: LocalizedError, Equatable, Sendable {
             .timedOut
         case .cancelled:
             .cancelled
+        case .serverCertificateUntrusted, .serverCertificateHasBadDate,
+             .serverCertificateNotYetValid, .serverCertificateHasUnknownRoot:
+            .serverTrustFailed
         default:
             .transport(detail: urlError.localizedDescription)
         }

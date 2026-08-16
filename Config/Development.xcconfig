@@ -27,4 +27,9 @@ API_MAX_RETRIES = 0
 
 FORCE_UPDATE_ENABLED = YES
 
+// Certificate pinning is off for development so local proxies (Charles,
+// Proxyman) and self-signed certs still work.
+CERT_PINNING_ENABLED = NO
+PINNED_PUBLIC_KEY_HASHES =
+
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DEVELOPMENT

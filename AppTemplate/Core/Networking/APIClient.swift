@@ -186,7 +186,7 @@ nonisolated final class URLSessionAPIClient: APIClient {
             request = try await interceptor.adapt(request, for: endpoint)
         }
 
-        let (data, response) = try await session.data(for: request)
+        let (data, response) = try await data(for: request)
 
         guard let http = response as? HTTPURLResponse else {
             throw APIError.invalidResponse
@@ -205,6 +205,31 @@ nonisolated final class URLSessionAPIClient: APIClient {
             data: data,
             headers: http.allHeaderFields
         )
+    }
+
+    /// Runs a request through the session's delegate so certificate-pinning
+    /// server-trust challenges reach `CertificatePinner`. `session.data(for:)`
+    /// would bypass the delegate, so a completion-handler task is bridged with
+    /// a continuation instead.
+    private func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+        let task = DataTaskBox()
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                let dataTask = session.dataTask(with: request) { data, response, error in
+                    if let error {
+                        continuation.resume(throwing: error)
+                    } else if let data, let response {
+                        continuation.resume(returning: (data, response))
+                    } else {
+                        continuation.resume(throwing: APIError.invalidResponse)
+                    }
+                }
+                task.value = dataTask
+                dataTask.resume()
+            }
+        } onCancel: {
+            task.value?.cancel()
+        }
     }
 
     private func recoveryDecision(
@@ -242,6 +267,13 @@ nonisolated final class URLSessionAPIClient: APIClient {
             "\(type): \(error.localizedDescription)"
         }
     }
+}
+
+/// Holds the in-flight data task so the surrounding async task can cancel it.
+/// `@unchecked Sendable` because the value is written once on the calling
+/// thread before any cancellation handler can observe it.
+private final class DataTaskBox: @unchecked Sendable {
+    var value: URLSessionDataTask?
 }
 
 private extension Duration {

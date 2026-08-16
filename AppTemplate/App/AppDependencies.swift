@@ -117,7 +117,9 @@ final class AppDependencies {
 
         let languages = Locale.preferredLanguages.prefix(3).joined(separator: ", ")
         configuration.httpAdditionalHeaders = ["Accept-Language": languages]
-        return URLSession(configuration: configuration)
+
+        let pinner = CertificatePinner(pinnedHashes: APIConfig.pinnedPublicKeyHashes)
+        return URLSession(configuration: configuration, delegate: pinner, delegateQueue: nil)
     }
 
     func makeLoginViewModel() -> LoginViewModel {

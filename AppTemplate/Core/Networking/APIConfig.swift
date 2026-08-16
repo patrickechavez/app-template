@@ -29,6 +29,19 @@ enum APIConfig {
 
     static let isForceUpdateEnabled: Bool = bool("FORCE_UPDATE_ENABLED")
 
+    static let isCertificatePinningEnabled: Bool = bool("CERT_PINNING_ENABLED")
+
+    /// Allowed public-key (SPKI) hashes for certificate pinning. Empty unless
+    /// pinning is enabled — and the pinner then falls back to default TLS
+    /// trust — so leaving the list blank is a safe, no-op default.
+    static let pinnedPublicKeyHashes: [String] = {
+        guard isCertificatePinningEnabled else { return [] }
+        return (string("PINNED_PUBLIC_KEY_HASHES") ?? "")
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+    }()
+
     static var retryPolicy: RetryPolicy {
         maxAttempts <= 1 ? .none : RetryPolicy(maxAttempts: maxAttempts)
     }

@@ -12,6 +12,10 @@
 	<string>$(API_TIMEOUT_SECONDS)</string>
 	<key>APP_URL_SCHEME</key>
 	<string>$(APP_URL_SCHEME)</string>
+	<key>CERT_PINNING_ENABLED</key>
+	<string>$(CERT_PINNING_ENABLED)</string>
+	<key>PINNED_PUBLIC_KEY_HASHES</key>
+	<string>$(PINNED_PUBLIC_KEY_HASHES)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

@@ -27,4 +27,9 @@ API_MAX_RETRIES = 2
 
 FORCE_UPDATE_ENABLED = YES
 
+// Certificate pinning is off for staging so test/QA environments aren't broken
+// by cert rotations mid-release.
+CERT_PINNING_ENABLED = NO
+PINNED_PUBLIC_KEY_HASHES =
+
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) STAGING
