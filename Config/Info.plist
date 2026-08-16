@@ -57,8 +57,6 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Allows you to take a new photo to use as your profile picture.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Allows you to unlock the app with Face ID instead of signing in again.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allows you to choose a photo from your library to use as your profile picture.</string>
 	<key>UIApplicationSceneManifest</key>
