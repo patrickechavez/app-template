@@ -1,6 +1,6 @@
 # AppTemplate
 
-A production-ready SwiftUI app template. MVVM + Repository, Swift 6 strict concurrency, a complete auth lifecycle, and no third-party dependencies.
+A production-ready SwiftUI app template. MVVM + Repository, Swift 6 strict concurrency, a complete auth lifecycle, and one third-party dependency — Firebase, kept behind protocol seams so the rest of the app never touches it.
 
 - iOS 17+ · Swift 6 · Xcode 26
 
@@ -103,6 +103,42 @@ Values live in `Config/*.xcconfig` and reach code through `APIConfig`. Never har
 Client SDK keys you'd rather not publish go in `Config/Secrets.xcconfig`, which is gitignored. Copy `Secrets.example.xcconfig`, drop the `.example`, fill it in — all three environments already `#include?` it, and the `?` means a clone without the file still builds.
 
 Everything there is substituted into Info.plist and ships inside the IPA. It keeps values out of git, not off a device. Server-side keys belong on your server.
+
+## Hardening
+
+Four opt-in protections. Two of them — jailbreak and anti-debug — are heuristic and report-only by design, so they flag rather than block.
+
+> **Pinning is optional.** The app is fully safe and behaves like a normal HTTPS app while `PINNED_PUBLIC_KEY_HASHES` is left blank — an empty list means default TLS trust, no extra rules. You only need to fill it in once you have a real production backend and want the extra protection.
+
+### Certificate pinning
+
+Pins the server's **public key** (SPKI), not the certificate, so a certificate renewal with the same key doesn't break the app. Off in Development and Staging so local proxies (Charles, Proxyman) and self-signed certs still work; on in Production.
+
+1. Generate the base64 SPKI hash for each endpoint's leaf certificate:
+
+   ```bash
+   openssl s_client -connect api.example.com:443 -showcerts </dev/null 2>/dev/null \
+     | openssl x509 -pubkey -noout \
+     | openssl pkey -pubin -outform der \
+     | openssl dgst -sha256 -binary \
+     | base64
+   ```
+
+2. Paste the output into `PINNED_PUBLIC_KEY_HASHES` in `Config/Production.xcconfig`, comma-separated for multiple keys.
+
+The pinner compares that to the hash the running app computes from the server's presented certificate. Leave the list empty and it falls back to default TLS trust — a safe no-op until you add real hashes. A failed match surfaces as a `.serverTrustFailed` error.
+
+### Screen-capture / app-switcher privacy
+
+A `PrivacyShieldView` covers the UI whenever the app is not active, so the task-switcher snapshot is blank. iOS can't prevent screenshots, so instead the app detects them (`ScreenshotDetector`) and records a `screenshot_captured` analytics event — capture is observable, not blockable.
+
+### Jailbreak detection
+
+`JailbreakDetector` checks for the usual filesystem indicators (Cydia, Sileo, sshd, …). It is **report-only**: jailbreak checks are trivially bypassable and can false-positive, so the app flags the device in analytics rather than refusing to run.
+
+### Anti-debug
+
+`DebuggerDetector` reads the `P_TRACED` process flag via `sysctl` and reports an attached debugger. Deliberately no `ptrace(PT_DENY_ATTACH)` — that reads as anti-tampering to App Review and can get a submission rejected. Obfuscation beyond the existing Release symbol-stripping is intentionally not attempted.
 
 ## Firebase
 
