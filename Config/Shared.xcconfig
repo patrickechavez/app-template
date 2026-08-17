@@ -1,0 +1,17 @@
+//
+//  Shared.xcconfig
+//  AppTemplate
+//
+//  Values every environment must agree on. If one ever needs to differ,
+//  move it into the three environment files instead of overriding it here.
+//
+//  NOTE: `//` starts a comment, so URLs must escape the double slash as
+//  `https:/$()/host`. The `$()` expands to nothing.
+//
+
+// The version users see. Bump it when you cut a release.
+MARKETING_VERSION = 1.0.0
+
+// Must increase with every App Store Connect upload. CI can override it:
+//   xcodebuild ... CURRENT_PROJECT_VERSION=$GITHUB_RUN_NUMBER
+CURRENT_PROJECT_VERSION = 1

@@ -2,35 +2,29 @@
 //  Development.xcconfig
 //  AppTemplate
 //
-//  Local / day-to-day development builds. Installs alongside Staging and
-//  Production because the bundle ID and display name are suffixed.
-//
-//  NOTE: `//` starts a comment in xcconfig files, so URLs must escape the
-//  double slash as `https:/$()/host`. The `$()` expands to nothing.
+//  Day-to-day local builds. Installs alongside Staging and Production
+//  because the bundle ID and display name differ.
 //
 
+#include "Shared.xcconfig"
 #include? "Secrets.xcconfig"
 
+// Identity
 PRODUCT_BUNDLE_IDENTIFIER = com.patrick.AppTemplate.dev
-APP_DISPLAY_NAME = App Template Dev
+APP_DISPLAY_NAME = Development
 APP_URL_SCHEME = apptemplate
 
-MARKETING_VERSION = 1.0.0
-CURRENT_PROJECT_VERSION = 1
-
+// API — short timeout and no retries so failures surface fast
 API_BASE_URL = https:/$()/dummyjson.com
-
-UPDATE_URL = itms-apps:/$()/apple.com/app/id000000000
-
-API_LOGGING_ENABLED = YES
-
 API_TIMEOUT_SECONDS = 20
 API_MAX_RETRIES = 0
+API_LOGGING_ENABLED = YES
 
+// Force update
+UPDATE_URL = itms-apps:/$()/apple.com/app/id000000000
 FORCE_UPDATE_ENABLED = YES
 
-// Certificate pinning is off for development so local proxies (Charles,
-// Proxyman) and self-signed certs still work.
+// Pinning off so local proxies (Charles, Proxyman) and self-signed certs work
 CERT_PINNING_ENABLED = NO
 PINNED_PUBLIC_KEY_HASHES =
 

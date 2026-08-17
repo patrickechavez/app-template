@@ -2,36 +2,30 @@
 //  Production.xcconfig
 //  AppTemplate
 //
-//  App Store builds. This is the only configuration real users ever run —
-//  treat every value here as load-bearing.
-//
-//  NOTE: `//` starts a comment in xcconfig files, so URLs must escape the
-//  double slash as `https:/$()/host`. The `$()` expands to nothing.
+//  App Store builds — the only configuration real users run. Treat every
+//  value here as load-bearing.
 //
 
+#include "Shared.xcconfig"
 #include? "Secrets.xcconfig"
 
+// Identity
 PRODUCT_BUNDLE_IDENTIFIER = com.patrick.AppTemplate
 APP_DISPLAY_NAME = App Template
 APP_URL_SCHEME = apptemplate
 
-MARKETING_VERSION = 1.0.0
-CURRENT_PROJECT_VERSION = 1
-
+// API
 API_BASE_URL = https:/$()/dummyjson.com
-
-UPDATE_URL = itms-apps:/$()/apple.com/app/id000000000
-
-API_LOGGING_ENABLED = NO
-
 API_TIMEOUT_SECONDS = 30
 API_MAX_RETRIES = 2
+API_LOGGING_ENABLED = NO
 
+// Force update
+UPDATE_URL = itms-apps:/$()/apple.com/app/id000000000
 FORCE_UPDATE_ENABLED = YES
 
-// Certificate pinning. Fill in the base64 SPKI hashes (see README "Hardening"),
-// then flip this to YES. Leaving it YES with an empty list would claim pinning
-// while performing none.
+// Add base64 SPKI hashes (see README "Hardening"), then flip this to YES.
+// YES with an empty list would claim pinning while performing none.
 CERT_PINNING_ENABLED = NO
 PINNED_PUBLIC_KEY_HASHES =
 
