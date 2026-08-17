@@ -15,7 +15,7 @@ protocol JailbreakDetecting: Sendable {
 /// analytics rather than acting as a security boundary.
 struct DefaultJailbreakDetector: JailbreakDetecting {
 
-    private let indicators = [
+    private static let indicators = [
         "/Applications/Cydia.app",
         "/Applications/Sileo.app",
         "/Applications/Zebra.app",
@@ -31,6 +31,11 @@ struct DefaultJailbreakDetector: JailbreakDetecting {
     ]
 
     var isJailbroken: Bool {
-        indicators.contains { FileManager.default.fileExists(atPath: $0) }
+        // The simulator shares the Mac's filesystem, where several of these exist.
+        #if targetEnvironment(simulator)
+        false
+        #else
+        Self.indicators.contains { FileManager.default.fileExists(atPath: $0) }
+        #endif
     }
 }

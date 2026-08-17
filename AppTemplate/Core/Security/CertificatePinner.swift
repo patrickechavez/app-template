@@ -7,6 +7,7 @@
 import CryptoKit
 import Foundation
 import Security
+import os
 
 /// Rejects TLS connections whose leaf certificate's public key isn't in the
 /// pinned allowlist. Pin the *public key* (SPKI), not the certificate, so a
@@ -37,7 +38,10 @@ final class CertificatePinner: NSObject, URLSessionDelegate, @unchecked Sendable
             completionHandler(.performDefaultHandling, nil)
         } else {
             AppLogger.network.error("Certificate pinning rejected the server's identity.")
-            completionHandler(.rejectProtectionSpace, nil)
+
+            // Fails the task as cancelled, which the client tells apart from its
+            // own cancellation. `.rejectProtectionSpace` gave no usable signal.
+            completionHandler(.cancelAuthenticationChallenge, nil)
         }
     }
 

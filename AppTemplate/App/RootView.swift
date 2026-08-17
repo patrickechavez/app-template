@@ -97,28 +97,26 @@ struct ServiceStatusView: View {
 
             Spacer()
 
+            // No UPDATE_URL means no button at all, so a misconfigured build stays gated.
             VStack(spacing: Theme.Spacing.md) {
-                if isUpdateRequired, let updateURL = APIConfig.updateURL {
-                    Button {
-                        openURL(updateURL)
-                    } label: {
-                        Text("Update Now", comment: "Button that opens the App Store listing")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                } else {
-
+                if !isUpdateRequired {
                     Button {
                         onDismiss()
                     } label: {
                         Text("Try Again", comment: "Button that dismisses the maintenance screen")
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+                } else if let updateURL = APIConfig.updateURL {
+                    Button {
+                        openURL(updateURL)
+                    } label: {
+                        Text("Update Now", comment: "Button that opens the App Store listing")
+                            .frame(maxWidth: .infinity)
+                    }
                 }
             }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
         }
         .padding(Theme.Spacing.xxl)
         .interactiveDismissDisabled(isUpdateRequired)

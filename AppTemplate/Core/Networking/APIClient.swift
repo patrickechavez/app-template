@@ -212,23 +212,28 @@ nonisolated final class URLSessionAPIClient: APIClient {
     /// would bypass the delegate, so a completion-handler task is bridged with
     /// a continuation instead.
     private func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        let task = DataTaskBox()
+        let box = DataTaskBox()
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 let dataTask = session.dataTask(with: request) { data, response, error in
                     if let error {
-                        continuation.resume(throwing: error)
+
+                        // A cancellation we didn't ask for came from the pinner
+                        // rejecting the server, which cancels the challenge.
+                        let isPinRejection = (error as? URLError)?.code == .cancelled
+                            && !box.wasCancelled
+                        continuation.resume(throwing: isPinRejection ? APIError.serverTrustFailed : error)
                     } else if let data, let response {
                         continuation.resume(returning: (data, response))
                     } else {
                         continuation.resume(throwing: APIError.invalidResponse)
                     }
                 }
-                task.value = dataTask
+                box.store(dataTask)
                 dataTask.resume()
             }
         } onCancel: {
-            task.value?.cancel()
+            box.cancel()
         }
     }
 
@@ -270,10 +275,38 @@ nonisolated final class URLSessionAPIClient: APIClient {
 }
 
 /// Holds the in-flight data task so the surrounding async task can cancel it.
-/// `@unchecked Sendable` because the value is written once on the calling
-/// thread before any cancellation handler can observe it.
-private final class DataTaskBox: @unchecked Sendable {
-    var value: URLSessionDataTask?
+/// `onCancel` runs on any thread and can arrive before the task exists, so the
+/// cancellation is remembered and applied on arrival.
+private final class DataTaskBox: Sendable {
+
+    private struct State {
+        var task: URLSessionDataTask?
+        var isCancelled = false
+    }
+
+    private let state = OSAllocatedUnfairLock(initialState: State())
+
+    /// Whether the surrounding async task cancelled this request. A cancellation
+    /// that didn't come from here came from the session delegate.
+    var wasCancelled: Bool {
+        state.withLock { $0.isCancelled }
+    }
+
+    func store(_ task: URLSessionDataTask) {
+        let alreadyCancelled = state.withLock { state in
+            state.task = task
+            return state.isCancelled
+        }
+        if alreadyCancelled { task.cancel() }
+    }
+
+    func cancel() {
+        let task = state.withLock { state in
+            state.isCancelled = true
+            return state.task
+        }
+        task?.cancel()
+    }
 }
 
 private extension Duration {

@@ -29,9 +29,10 @@ API_MAX_RETRIES = 2
 
 FORCE_UPDATE_ENABLED = YES
 
-// Certificate pinning. Fill in the base64 SPKI hashes (see README "Hardening")
-// before shipping; until then the pinner falls back to default TLS trust.
-CERT_PINNING_ENABLED = YES
+// Certificate pinning. Fill in the base64 SPKI hashes (see README "Hardening"),
+// then flip this to YES. Leaving it YES with an empty list would claim pinning
+// while performing none.
+CERT_PINNING_ENABLED = NO
 PINNED_PUBLIC_KEY_HASHES =
 
 SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) PRODUCTION

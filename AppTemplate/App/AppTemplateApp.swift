@@ -18,7 +18,27 @@ final class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate {
     ) -> Bool {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
+
+        // Here rather than in App.init(), which runs before the line above and
+        // would drop the events. Debug builds always have a debugger attached,
+        // so reporting from them would be noise.
+        #if !DEBUG
+        reportDeviceSecurity()
+        #endif
         return true
+    }
+
+    /// Report-only hardening checks. Flags the device, never blocks it.
+    private func reportDeviceSecurity() {
+        if DefaultJailbreakDetector().isJailbroken {
+            Observability.analytics.track("device_jailbroken")
+            AppLogger.lifecycle.warning("Jailbreak indicators detected on device")
+        }
+
+        if DefaultDebuggerDetector().isDebuggerAttached {
+            Observability.analytics.track("debugger_attached")
+            AppLogger.lifecycle.warning("Debugger is attached to the process")
+        }
     }
 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
@@ -42,7 +62,6 @@ struct AppTemplateApp: App {
         _navigator = State(
             wrappedValue: AppNavigator(parser: dependencies.deepLinks)
         )
-        reportDeviceSecurity(dependencies: dependencies)
     }
 
     var body: some Scene {
@@ -93,17 +112,4 @@ struct AppTemplateApp: App {
         }
     }
 
-    /// Report-only hardening checks: flag the device in analytics and logs if
-    /// jailbreak indicators or a debugger are detected, without blocking.
-    private func reportDeviceSecurity(dependencies: AppDependencies) {
-        if DefaultJailbreakDetector().isJailbroken {
-            dependencies.analytics.track("device_jailbroken")
-            AppLogger.lifecycle.warning("Jailbreak indicators detected on device")
-        }
-
-        if DefaultDebuggerDetector().isDebuggerAttached {
-            dependencies.analytics.track("debugger_attached")
-            AppLogger.lifecycle.warning("Debugger is attached to the process")
-        }
-    }
 }
