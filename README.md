@@ -64,14 +64,16 @@ Then remove `makeHomeViewModel`, `makeItemDetailViewModel` (both overloads), and
 
 - **Networking** — one send path with verb helpers, typed errors, server-message parsing, interceptors, retry with backoff
 - **Auth** — access + refresh tokens, single-flight refresh, 401 to refresh to retry to sign-out, Keychain storage
-- **Navigation** — typed routes, deep links, universal links, deferred links
+- **Navigation** — typed routes, deep links, universal links, deferred links, force-update and maintenance gates
 - **UI** — design system, unified `LoadState`, empty / error / skeleton states, accessibility identifiers, localization via String Catalog
 - **Images** — bounded two-tier cache with LRU eviction and in-flight de-duplication
 - **Connectivity** — `NWPathMonitor` behind an offline banner, so a failing screen reads as a connection problem
 - **Observability** — analytics and crash reporting behind protocols, with Firebase adapters; non-fatals recorded with no per-feature wiring
 - **Build** — three environments, privacy manifest, one-command rename
 
-Scaffolded but **not** wired — push notifications, and the force-update gate (`FORCE_UPDATE_ENABLED` and `VersionCheck` exist; nothing reads them).
+The service gates are driven by HTTP status, not by a version endpoint. A `426` blocks the app behind "Update Required" and a `503` behind "Back Soon", both routed through `SessionEventBus`. `APIConfig.isForceUpdateEnabled` and the `VersionCheck` model belong to a client-side version-comparison approach that isn't built — delete them, or wire them to a version endpoint if you prefer that shape.
+
+Scaffolded but **not** wired — push notifications, see below.
 
 ## Architecture
 
