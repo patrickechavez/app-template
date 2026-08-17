@@ -27,6 +27,9 @@ enum APIConfig {
 
     static let isLoggingEnabled: Bool = bool("API_LOGGING_ENABLED")
 
+    /// Unused, and not a kill switch — the live gate is a 426 from the server,
+    /// which fires whatever this is set to. Kept for a client-side version
+    /// check, alongside `VersionCheck`.
     static let isForceUpdateEnabled: Bool = bool("FORCE_UPDATE_ENABLED")
 
     static let isCertificatePinningEnabled: Bool = bool("CERT_PINNING_ENABLED")
