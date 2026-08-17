@@ -11,7 +11,7 @@
 
 #include? "Secrets.xcconfig"
 
-APP_BUNDLE_ID = com.patrick.AppTemplate.staging
+PRODUCT_BUNDLE_IDENTIFIER = com.patrick.AppTemplate.staging
 APP_DISPLAY_NAME = App Template Staging
 APP_URL_SCHEME = apptemplate
 

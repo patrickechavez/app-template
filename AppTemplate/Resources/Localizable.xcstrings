@@ -769,6 +769,9 @@
         }
       }
     },
+    "We couldn't establish a secure connection. Please try again." : {
+      "comment" : "Error shown when the server's certificate fails trust validation"
+    },
     "We couldn't find what you were looking for." : {
       "comment" : "Error shown when a resource does not exist",
       "extractionState" : "manual",
