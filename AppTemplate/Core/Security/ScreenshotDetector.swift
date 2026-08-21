@@ -6,8 +6,7 @@
 
 import UIKit
 
-/// Emits when the user takes a screenshot. iOS cannot prevent a screenshot —
-/// this makes captures observable so they can be flagged in analytics.
+// Detects when the user takes a screenshot of the app.
 enum ScreenshotDetector {
 
     static var publisher: NotificationCenter.Publisher {

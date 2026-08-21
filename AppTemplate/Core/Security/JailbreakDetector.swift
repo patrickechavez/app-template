@@ -10,9 +10,7 @@ protocol JailbreakDetecting: Sendable {
     var isJailbroken: Bool { get }
 }
 
-/// Heuristic jailbreak detection via filesystem indicators. Detect-and-report
-/// only: it is bypassable and can false-positive, so it flags devices in
-/// analytics rather than acting as a security boundary.
+// Checks if the device has been jailbroken (modified to remove restrictions).
 struct DefaultJailbreakDetector: JailbreakDetecting {
 
     private static let indicators = [

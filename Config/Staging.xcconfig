@@ -2,9 +2,6 @@
 //  Staging.xcconfig
 //  AppTemplate
 //
-//  QA and internal TestFlight builds. Release-optimized, but pointed at
-//  the staging backend.
-//
 
 #include "Shared.xcconfig"
 #include? "Secrets.xcconfig"

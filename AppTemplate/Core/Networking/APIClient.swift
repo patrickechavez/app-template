@@ -274,9 +274,7 @@ nonisolated final class URLSessionAPIClient: APIClient {
     }
 }
 
-/// Holds the in-flight data task so the surrounding async task can cancel it.
-/// `onCancel` runs on any thread and can arrive before the task exists, so the
-/// cancellation is remembered and applied on arrival.
+// Manages a network request so it can be canceled if needed.
 private final class DataTaskBox: Sendable {
 
     private struct State {

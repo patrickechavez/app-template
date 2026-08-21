@@ -9,13 +9,7 @@ import Network
 import Observation
 import os
 
-/// Ambient connectivity, so the app can say "you're offline" before a request
-/// fails rather than after it times out.
-///
-/// This reports whether a route exists, not whether your API is reachable. A
-/// captive portal or a backend outage both look connected from here, which is
-/// why `APIError.offline` from a failed request is still the source of truth
-/// for a given screen.
+// Monitors if the device is connected to the internet.
 @Observable
 @MainActor
 final class NetworkMonitor {

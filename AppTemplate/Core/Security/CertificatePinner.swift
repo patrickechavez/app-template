@@ -9,9 +9,7 @@ import Foundation
 import Security
 import os
 
-/// Rejects TLS connections whose leaf certificate's public key isn't in the
-/// pinned allowlist. Pin the *public key* (SPKI), not the certificate, so a
-/// certificate renewal with the same key doesn't break the app.
+// Validates that the server's certificate is trusted before allowing connections.
 final class CertificatePinner: NSObject, URLSessionDelegate, @unchecked Sendable {
 
     private let pinnedHashes: Set<String>
@@ -98,7 +96,7 @@ final class CertificatePinner: NSObject, URLSessionDelegate, @unchecked Sendable
     }
 }
 
-/// Minimal DER encoder for the handful of ASN.1 shapes SPKI pinning needs.
+// Encodes data in the format needed for certificate validation.
 private enum DER {
 
     static func sequence(_ contents: Data) -> Data {

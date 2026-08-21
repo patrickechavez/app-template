@@ -6,8 +6,7 @@
 
 import SwiftUI
 
-/// Opaque overlay shown while the app is not active, so the task-switcher
-/// snapshot hides the user's content instead of revealing it.
+// Hides the app's content when switching between apps for privacy.
 struct PrivacyShieldView: View {
 
     var body: some View {

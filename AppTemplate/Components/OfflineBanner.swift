@@ -6,8 +6,7 @@
 
 import SwiftUI
 
-/// Shown while the device has no route to the network, so a failing screen
-/// reads as a connection problem rather than a broken app.
+// Shows a message when the device has no internet connection.
 struct OfflineBanner: View {
 
     var body: some View {

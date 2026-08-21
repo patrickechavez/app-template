@@ -6,14 +6,7 @@
 
 import Foundation
 
-/// Ambient access to the observability seams, for the two generic error funnels
-/// — `LoadableViewModel.perform` and `ActionState.run` — which are reached
-/// through a protocol extension and a shared class, neither of which has an
-/// injection point.
-///
-/// Everywhere else, take the dependency explicitly from `AppDependencies`.
-/// `AppDependencies.live()` installs the Firebase adapters here; previews and
-/// tests leave the no-ops in place, so nothing reaches the network.
+// Handles logging and crash reporting throughout the app.
 @MainActor
 enum Observability {
 

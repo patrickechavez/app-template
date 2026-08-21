@@ -81,9 +81,7 @@ struct User: Codable, Identifiable, Equatable, Sendable {
     }
 }
 
-/// Never decoded. The shape for a client-side version check against a
-/// `/version` endpoint, if you ever want the gate to fire before the first
-/// real request. Today a 426 from the server does the blocking.
+// Holds version information for checking if the app needs an update.
 struct VersionCheck: Decodable, Sendable {
 
     let minimumVersion: String

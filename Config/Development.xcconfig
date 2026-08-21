@@ -2,9 +2,6 @@
 //  Development.xcconfig
 //  AppTemplate
 //
-//  Day-to-day local builds. Installs alongside Staging and Production
-//  because the bundle ID and display name differ.
-//
 
 #include "Shared.xcconfig"
 #include? "Secrets.xcconfig"

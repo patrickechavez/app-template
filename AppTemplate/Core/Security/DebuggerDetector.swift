@@ -10,9 +10,7 @@ protocol DebuggerDetecting: Sendable {
     var isDebuggerAttached: Bool { get }
 }
 
-/// Reports whether a debugger is attached via the `P_TRACED` process flag.
-/// Report-only — deliberately avoiding `ptrace(PT_DENY_ATTACH)`, which can get
-/// an App Store submission rejected.
+// Checks if a debugger is currently attached to the app.
 struct DefaultDebuggerDetector: DebuggerDetecting {
 
     var isDebuggerAttached: Bool {

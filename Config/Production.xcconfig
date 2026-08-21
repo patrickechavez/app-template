@@ -2,9 +2,6 @@
 //  Production.xcconfig
 //  AppTemplate
 //
-//  App Store builds — the only configuration real users run. Treat every
-//  value here as load-bearing.
-//
 
 #include "Shared.xcconfig"
 #include? "Secrets.xcconfig"
